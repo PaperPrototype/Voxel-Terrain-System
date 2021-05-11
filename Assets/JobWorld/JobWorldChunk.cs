@@ -45,8 +45,8 @@ public class JobWorldChunk
         {
             Debug.Log("Starting draw: " + gameObject.transform.position);
 
-            m_vertices = new NativeArray<Vector3>(24 * Data.chunkSize * Data.chunkSize * Data.chunkSize, Allocator.TempJob);
-            m_triangles = new NativeArray<int>(36 * Data.chunkSize * Data.chunkSize * Data.chunkSize, Allocator.TempJob);
+            m_vertices = new NativeArray<Vector3>(24 * Data.chunkSize * Data.chunkSize * Data.chunkSize / 2, Allocator.TempJob);
+            m_triangles = new NativeArray<int>(36 * Data.chunkSize * Data.chunkSize * Data.chunkSize / 2, Allocator.TempJob);
             m_vertexIndex = new NativeArray<int>(1, Allocator.TempJob);
             m_triangleIndex = new NativeArray<int>(1, Allocator.TempJob);
 
