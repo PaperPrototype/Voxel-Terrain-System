@@ -5,7 +5,7 @@ using Unity.Mathematics;
 
 public static class Data
 {
-    public const int worldSize = 32;
+    public const int worldSize = 16;
 
     public const int chunkSize = 16;
 

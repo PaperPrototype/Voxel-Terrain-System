@@ -4,8 +4,13 @@ using UnityEngine;
 using Unity.Jobs;
 using Unity.Collections;
 
-public class JobChunk : MonoBehaviour
+[RequireComponent(typeof(MeshRenderer))]
+[RequireComponent(typeof(MeshFilter))]
+public class LodChunk : MonoBehaviour
 {
+    [Min(1)]
+    public int lodLevel = 1; // change this value in the editor!
+
     private NativeArray<Vector3> m_vertices;
     private NativeArray<int> m_triangles;
     private NativeArray<int> m_vertexIndex;
@@ -20,7 +25,8 @@ public class JobChunk : MonoBehaviour
         m_vertexIndex = new NativeArray<int>(1, Allocator.TempJob);
         m_triangleIndex = new NativeArray<int>(1, Allocator.TempJob);
 
-        ChunkJob job = new ChunkJob();
+        LodChunkJob job = new LodChunkJob();
+        job.lodLevel = lodLevel; // set the Lod (Level of detail)
         job.chunkPos = gameObject.transform.position;
         job.vertices = m_vertices;
         job.triangles = m_triangles;
@@ -39,8 +45,7 @@ public class JobChunk : MonoBehaviour
         m_mesh.RecalculateBounds();
         m_mesh.RecalculateNormals();
 
-        MeshFilter filter = gameObject.AddComponent<MeshFilter>();
-        filter.mesh = m_mesh;
+        gameObject.GetComponent<MeshFilter>().mesh = m_mesh;
 
         // free memory
         m_vertices.Dispose();
@@ -50,8 +55,9 @@ public class JobChunk : MonoBehaviour
     }
 }
 
-public struct ChunkJob : IJob
+public struct LodChunkJob : IJob
 {
+    public int lodLevel;
     public Vector3 chunkPos;
     public NativeArray<Vector3> vertices;
     public NativeArray<int> triangles;
@@ -63,13 +69,13 @@ public struct ChunkJob : IJob
         vertexIndex[0] = 0;
         triangleIndex[0] = 0;
 
-        for (int x = 0; x < Data.chunkSize; x++)
+        for (int x = 0; x < Data.chunkSize / lodLevel; x++)
         {
-            for (int y = 0; y < Data.chunkSize; y++)
+            for (int y = 0; y < Data.chunkSize / lodLevel; y++)
             {
-                for (int z = 0; z < Data.chunkSize; z++)
+                for (int z = 0; z < Data.chunkSize / lodLevel; z++)
                 {
-                    Vector3 position = new Vector3(x, y, z);
+                    Vector3 position = new Vector3(x, y, z) * lodLevel;
 
                     if (IsSolid(position))
                     {
@@ -84,12 +90,12 @@ public struct ChunkJob : IJob
     {
         for (int face = 0; face < 6; face++)
         {
-            if (!IsSolid(Data.NeighborOffset[face] + position))
+            if (!IsSolid(Data.NeighborOffset[face] + position * lodLevel))
             {
-                vertices[vertexIndex[0] + 0] = position + Data.Vertices[Data.BuildOrder[face, 0]];
-                vertices[vertexIndex[0] + 1] = position + Data.Vertices[Data.BuildOrder[face, 1]];
-                vertices[vertexIndex[0] + 2] = position + Data.Vertices[Data.BuildOrder[face, 2]];
-                vertices[vertexIndex[0] + 3] = position + Data.Vertices[Data.BuildOrder[face, 3]];
+                vertices[vertexIndex[0] + 0] = position + Data.Vertices[Data.BuildOrder[face, 0]] * lodLevel;
+                vertices[vertexIndex[0] + 1] = position + Data.Vertices[Data.BuildOrder[face, 1]] * lodLevel;
+                vertices[vertexIndex[0] + 2] = position + Data.Vertices[Data.BuildOrder[face, 2]] * lodLevel;
+                vertices[vertexIndex[0] + 3] = position + Data.Vertices[Data.BuildOrder[face, 3]] * lodLevel;
 
                 // get the correct triangle index
                 triangles[triangleIndex[0] + 0] = vertexIndex[0] + 0;
@@ -117,7 +123,7 @@ public struct ChunkJob : IJob
         int baseSurfaceHeight = NoiseUtils.GenerateHeight(chunkPos.x + position.x, chunkPos.z + position.z, 128);
 
         // generate surface terrain
-        if (worldY <= baseSurfaceHeight - 5)
+        if (worldY <= baseSurfaceHeight)
             return true;
         else
             return false;
