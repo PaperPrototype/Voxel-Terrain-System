@@ -40,16 +40,26 @@ public class LodWorldChunk
         m_meshRenderer.material = m_material;
     }
 
-    public void CheckLod(Vector3 centerPos, int lodIncrement)
+    public void CheckLod(Vector3 centerPos)
     {
-        // TODO Possibly Distance function in the LodChunkJob to increase performance
         int unitDistance = Mathf.RoundToInt(Vector3.Distance(centerPos, gameObject.transform.position) / Data.chunkSize) + 1;
 
-        // check if lod level needs updated
-        if (chunkLodLevel != unitDistance)
+        if (unitDistance <= 2)
         {
-            Debug.Log("Setting LOD: " + unitDistance);
-            chunkLodLevel = unitDistance;
+            Debug.Log("Setting LOD: " + 1);
+            chunkLodLevel = 1;
+            needsDrawn = true;
+        }
+        else if (unitDistance <= 4)
+        {
+            Debug.Log("Setting LOD: " + 2);
+            chunkLodLevel = 2;
+            needsDrawn = true;
+        }
+        else if(unitDistance <= 7)
+        {
+            Debug.Log("Setting LOD: " + 3);
+            chunkLodLevel = 3;
             needsDrawn = true;
         }
     }

@@ -6,8 +6,6 @@ public class LodWorld : MonoBehaviour
 {
     public Material material;
     public Transform center;
-    [Min(1)]
-    public int lodIncrement = 5;
     public const int offset = Data.worldSize / 2;
 
     private LodWorldChunk[,] chunks = new LodWorldChunk[Data.worldSize, Data.worldSize];
@@ -20,7 +18,7 @@ public class LodWorld : MonoBehaviour
             for (int z = 0; z < Data.worldSize; z++)
             {
                 chunks[x, z] = new LodWorldChunk(material, new Vector3(x * Data.chunkSize, 0, z * Data.chunkSize));
-                chunks[x, z].CheckLod(center.position, lodIncrement);
+                chunks[x, z].CheckLod(center.position);
             }
         }
 
@@ -74,7 +72,7 @@ public class LodWorld : MonoBehaviour
                 }
 
                 // once positioned set their lod levels
-                chunks[x, z].CheckLod(center.position, lodIncrement);
+                chunks[x, z].CheckLod(center.position);
             }
         }
 

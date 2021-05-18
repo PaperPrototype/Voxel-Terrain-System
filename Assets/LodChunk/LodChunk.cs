@@ -90,7 +90,7 @@ public struct LodChunkJob : IJob
     {
         for (int face = 0; face < 6; face++)
         {
-            if (!IsSolid(Data.NeighborOffset[face] + position * lodLevel))
+            if (!IsSolid((Data.NeighborOffset[face] * lodLevel) + position))
             {
                 vertices[vertexIndex[0] + 0] = position + Data.Vertices[Data.BuildOrder[face, 0]] * lodLevel;
                 vertices[vertexIndex[0] + 1] = position + Data.Vertices[Data.BuildOrder[face, 1]] * lodLevel;
