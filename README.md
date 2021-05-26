@@ -1,5 +1,5 @@
 # VoxelSystem
- A simpleified voxel engine using Unity 2021.1 there is a companion open source course for this project! https://github.com/PaperPrototype/Intro-VoxelSystems-in-Unity 
+ A simpleified voxel engine using Unity 2021.1 with a companion free course! https://github.com/PaperPrototype/Intro-VoxelSystems-in-Unity 
  
  # Getting started
  To get started clone this repo into your machine or download it.
