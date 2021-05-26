@@ -13,6 +13,8 @@
     - 1D, a 1D cube based proof of concept chunk recycling system
     - 2D, a 2D (x, z) cube based proof of concept chunk recycling system
 
+EDIT: A lot has moved around and changed so the above descriptions may not be correct.
+
  You can upen up the scenes in each sample and hit play. Some of them have a gameObject called center, if you move the center's position around the chunks will recycle and redraw to preserve haveing the center gameobject in the center.
  
  These samples are all really straight forward and I've made them as simple as possible. So don't be afraid to just jump right in and open them up in Unity.
