@@ -1,11 +1,21 @@
+// *********************
+// NOT CURRENTLY WORKING
+// *********************
+
 using UnityEngine;
-using Unity.Jobs;
 using Unity.Collections;
+using Unity.Jobs;
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
-public class JobChunk : MonoBehaviour
+public class JobColorChunk : MonoBehaviour
 {
+    [SerializeField]
+    private VoxelType[] voxelTypes;
+
+    private NativeArray<VoxelType> m_voxelTypes;
+    private NativeArray<Color> m_vertexColors;
+
     private NativeArray<Vector3> m_vertices;
     private NativeArray<int> m_triangles;
     private NativeArray<int> m_vertexIndex;
@@ -13,13 +23,23 @@ public class JobChunk : MonoBehaviour
 
     private void Start()
     {
+        m_voxelTypes = new NativeArray<VoxelType>(voxelTypes.Length, Allocator.Temp);
+        m_vertexColors = new NativeArray<Color>(24 * Data.chunkSize * Data.chunkSize * Data.chunkSize / 2, Allocator.Temp);
+
         m_vertices = new NativeArray<Vector3>(24 * Data.chunkSize * Data.chunkSize * Data.chunkSize / 2, Allocator.TempJob);
         m_triangles = new NativeArray<int>(36 * Data.chunkSize * Data.chunkSize * Data.chunkSize / 2, Allocator.TempJob);
         m_vertexIndex = new NativeArray<int>(1, Allocator.TempJob);
         m_triangleIndex = new NativeArray<int>(1, Allocator.TempJob);
 
-        ChunkJob job = new ChunkJob();
+        m_voxelTypes.CopyFrom(voxelTypes);
+
+        ColorChunkJob job = new ColorChunkJob();
+
+        job.voxelTypes = m_voxelTypes;
+        job.vertexColors = m_vertexColors;
+
         job.chunkPos = gameObject.transform.position;
+
         job.vertices = m_vertices;
         job.triangles = m_triangles;
         job.vertexIndex = m_vertexIndex;
@@ -41,6 +61,9 @@ public class JobChunk : MonoBehaviour
         filter.mesh = m_mesh;
 
         // free memory
+        m_voxelTypes.Dispose();
+        m_vertexColors.Dispose();
+
         m_vertices.Dispose();
         m_triangles.Dispose();
         m_vertexIndex.Dispose();
@@ -48,9 +71,14 @@ public class JobChunk : MonoBehaviour
     }
 }
 
-public struct ChunkJob : IJob
+
+public struct ColorChunkJob : IJob
 {
+    public NativeArray<VoxelType> voxelTypes;
+    public NativeArray<Color> vertexColors;
+
     public Vector3 chunkPos;
+
     public NativeArray<Vector3> vertices;
     public NativeArray<int> triangles;
     public NativeArray<int> vertexIndex;
@@ -109,17 +137,22 @@ public struct ChunkJob : IJob
         }
     }
 
-    private static bool IsSolid(FastNoiseLite noise, Vector3 voxelPos)
+    private VoxelType GetVoxel(FastNoiseLite noise, Vector3 voxelPos)
     {
         float height = noise.GetNoise(voxelPos.x, voxelPos.z) * Data.chunkSize;
-
         if (voxelPos.y <= height)
         {
-            return true;
+
+            return voxelTypes[1]; // dirt in voxel lookup table
         }
         else
         {
-            return false;
+            return voxelTypes[0]; // air in lookup table
         }
+    }
+
+    private bool IsSolid(FastNoiseLite noise, Vector3 voxelPos)
+    {
+        return GetVoxel(noise, voxelPos).isSolid;
     }
 }

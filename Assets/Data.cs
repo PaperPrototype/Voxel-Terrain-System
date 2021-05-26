@@ -38,11 +38,11 @@ public class Data
 
     public static readonly Vector3[] NeighborOffset = new Vector3[6]
     {
-        new Vector3(1.0f, 0.0f, 0.0f),
-        new Vector3(-1.0f, 0.0f, 0.0f),
-        new Vector3(0.0f, 1.0f, 0.0f),
-        new Vector3(0.0f, -1.0f, 0.0f),
-        new Vector3(0.0f, 0.0f, 1.0f),
-        new Vector3(0.0f, 0.0f, -1.0f),
+        new Vector3(1.0f, 0.0f, 0.0f),  // right
+        new Vector3(-1.0f, 0.0f, 0.0f), // left
+        new Vector3(0.0f, 1.0f, 0.0f),  // up
+        new Vector3(0.0f, -1.0f, 0.0f), // down
+        new Vector3(0.0f, 0.0f, 1.0f),  // front
+        new Vector3(0.0f, 0.0f, -1.0f), // back
     };
 }
