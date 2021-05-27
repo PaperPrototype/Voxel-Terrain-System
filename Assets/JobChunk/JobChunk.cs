@@ -8,6 +8,7 @@ public class JobChunk : MonoBehaviour
 {
     private NativeArray<Vector3> m_vertices;
     private NativeArray<int> m_triangles;
+    private NativeArray<Vector2> m_uvs;
     private NativeArray<int> m_vertexIndex;
     private NativeArray<int> m_triangleIndex;
 
@@ -15,6 +16,7 @@ public class JobChunk : MonoBehaviour
     {
         m_vertices = new NativeArray<Vector3>(24 * Data.chunkSize * Data.chunkSize * Data.chunkSize / 2, Allocator.TempJob);
         m_triangles = new NativeArray<int>(36 * Data.chunkSize * Data.chunkSize * Data.chunkSize / 2, Allocator.TempJob);
+        m_uvs = new NativeArray<Vector2>(24 * Data.chunkSize * Data.chunkSize * Data.chunkSize / 2, Allocator.TempJob);
         m_vertexIndex = new NativeArray<int>(1, Allocator.TempJob);
         m_triangleIndex = new NativeArray<int>(1, Allocator.TempJob);
 
@@ -22,6 +24,7 @@ public class JobChunk : MonoBehaviour
         job.chunkPos = gameObject.transform.position;
         job.vertices = m_vertices;
         job.triangles = m_triangles;
+        job.uvs = m_uvs;
         job.vertexIndex = m_vertexIndex;
         job.triangleIndex = m_triangleIndex;
 
@@ -31,7 +34,8 @@ public class JobChunk : MonoBehaviour
         Mesh m_mesh = new Mesh
         {
             vertices = m_vertices.Slice<Vector3>(0, job.vertexIndex[0]).ToArray(),
-            triangles = m_triangles.Slice<int>(0, job.triangleIndex[0]).ToArray()
+            triangles = m_triangles.Slice<int>(0, job.triangleIndex[0]).ToArray(),
+            uv = m_uvs.Slice<Vector2>(0, job.vertexIndex[0]).ToArray()
         };
 
         m_mesh.RecalculateBounds();
@@ -43,6 +47,7 @@ public class JobChunk : MonoBehaviour
         // free memory
         m_vertices.Dispose();
         m_triangles.Dispose();
+        m_uvs.Dispose();
         m_vertexIndex.Dispose();
         m_triangleIndex.Dispose();
     }
@@ -53,6 +58,7 @@ public struct ChunkJob : IJob
     public Vector3 chunkPos;
     public NativeArray<Vector3> vertices;
     public NativeArray<int> triangles;
+    public NativeArray<Vector2> uvs;
     public NativeArray<int> vertexIndex;
     public NativeArray<int> triangleIndex;
 
@@ -99,6 +105,11 @@ public struct ChunkJob : IJob
                 triangles[triangleIndex[0] + 3] = vertexIndex[0] + 2;
                 triangles[triangleIndex[0] + 4] = vertexIndex[0] + 1;
                 triangles[triangleIndex[0] + 5] = vertexIndex[0] + 3;
+
+                uvs[vertexIndex[0] + 0] = new Vector2(0, 0);
+                uvs[vertexIndex[0] + 1] = new Vector2(0, 1);
+                uvs[vertexIndex[0] + 2] = new Vector2(1, 0);
+                uvs[vertexIndex[0] + 3] = new Vector2(1, 1);
 
                 // increment by 4 because we only added 4 vertices
                 vertexIndex[0] += 4;
