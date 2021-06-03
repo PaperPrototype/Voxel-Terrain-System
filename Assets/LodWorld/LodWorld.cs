@@ -6,16 +6,16 @@ public class LodWorld : MonoBehaviour
 {
     public Material material;
     public Transform center;
-    public const int offset = Data.worldSize / 2;
+    public const int offset = Data.chunkNum / 2;
 
-    private LodWorldChunk[,] chunks = new LodWorldChunk[Data.worldSize, Data.worldSize];
+    private LodWorldChunk[,] chunks = new LodWorldChunk[Data.chunkNum, Data.chunkNum];
 
     private void Start()
     {
         // initialize 256 chunks
-        for (int x = 0; x < Data.worldSize; x++)
+        for (int x = 0; x < Data.chunkNum; x++)
         {
-            for (int z = 0; z < Data.worldSize; z++)
+            for (int z = 0; z < Data.chunkNum; z++)
             {
                 chunks[x, z] = new LodWorldChunk(material, new Vector3(x * Data.chunkSize, 0, z * Data.chunkSize));
                 chunks[x, z].CheckLod(center.position);
@@ -23,18 +23,18 @@ public class LodWorld : MonoBehaviour
         }
 
         // 256 chunks drawing in jobs
-        for (int x = 0; x < Data.worldSize; x++)
+        for (int x = 0; x < Data.chunkNum; x++)
         {
-            for (int z = 0; z < Data.worldSize; z++)
+            for (int z = 0; z < Data.chunkNum; z++)
             {
                 chunks[x, z].StartDraw();
             }
         }
 
         // 256 chunks finishing drawing
-        for (int x = 0; x < Data.worldSize; x++)
+        for (int x = 0; x < Data.chunkNum; x++)
         {
-            for (int z = 0; z < Data.worldSize; z++)
+            for (int z = 0; z < Data.chunkNum; z++)
             {
                 chunks[x, z].CompleteDraw();
             }
@@ -43,31 +43,31 @@ public class LodWorld : MonoBehaviour
 
     private void Update()
     {
-        for (int x = 0; x < Data.worldSize; x++)
+        for (int x = 0; x < Data.chunkNum; x++)
         {
-            for (int z = 0; z < Data.worldSize; z++)
+            for (int z = 0; z < Data.chunkNum; z++)
             {
                 // x
-                if (center.position.x + Data.worldSize * Data.chunkSize < chunks[x, z].gameObject.transform.position.x)
+                if (center.position.x + Data.chunkNum * Data.chunkSize < chunks[x, z].gameObject.transform.position.x)
                 {
-                    chunks[x, z].gameObject.transform.position -= new Vector3(Data.worldSize * Data.chunkSize, 0, 0);
+                    chunks[x, z].gameObject.transform.position -= new Vector3(Data.chunkNum * Data.chunkSize, 0, 0);
                     chunks[x, z].needsDrawn = true;
                 }
                 if (center.position.x > chunks[x, z].gameObject.transform.position.x)
                 {
-                    chunks[x, z].gameObject.transform.position += new Vector3(Data.worldSize * Data.chunkSize, 0, 0);
+                    chunks[x, z].gameObject.transform.position += new Vector3(Data.chunkNum * Data.chunkSize, 0, 0);
                     chunks[x, z].needsDrawn = true;
                 }
 
                 // z
-                if (center.position.z + Data.worldSize * Data.chunkSize < chunks[x, z].gameObject.transform.position.z)
+                if (center.position.z + Data.chunkNum * Data.chunkSize < chunks[x, z].gameObject.transform.position.z)
                 {
-                    chunks[x, z].gameObject.transform.position -= new Vector3(0, 0, Data.worldSize * Data.chunkSize);
+                    chunks[x, z].gameObject.transform.position -= new Vector3(0, 0, Data.chunkNum * Data.chunkSize);
                     chunks[x, z].needsDrawn = true;
                 }
                 if (center.position.z > chunks[x, z].gameObject.transform.position.z)
                 {
-                    chunks[x, z].gameObject.transform.position += new Vector3(0, 0, Data.worldSize * Data.chunkSize);
+                    chunks[x, z].gameObject.transform.position += new Vector3(0, 0, Data.chunkNum * Data.chunkSize);
                     chunks[x, z].needsDrawn = true;
                 }
 
@@ -77,9 +77,9 @@ public class LodWorld : MonoBehaviour
         }
 
         // 256 chunks drawing in jobs
-        for (int x = 0; x < Data.worldSize; x++)
+        for (int x = 0; x < Data.chunkNum; x++)
         {
-            for (int z = 0; z < Data.worldSize; z++)
+            for (int z = 0; z < Data.chunkNum; z++)
             {
                 chunks[x, z].StartDraw();
             }
@@ -89,9 +89,9 @@ public class LodWorld : MonoBehaviour
     private void LateUpdate()
     {
         // 256 chunks finishing drawing
-        for (int x = 0; x < Data.worldSize; x++)
+        for (int x = 0; x < Data.chunkNum; x++)
         {
-            for (int z = 0; z < Data.worldSize; z++)
+            for (int z = 0; z < Data.chunkNum; z++)
             {
                 chunks[x, z].CompleteDraw();
             }

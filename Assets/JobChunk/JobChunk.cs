@@ -12,8 +12,8 @@ public class JobChunk : MonoBehaviour
     private NativeArray<int> m_vertexIndex;
     private NativeArray<int> m_triangleIndex;
 
-    private void Start()
-    {
+    private void Start() {
+
         m_vertices = new NativeArray<Vector3>(24 * Data.chunkSize * Data.chunkSize * Data.chunkSize / 2, Allocator.TempJob);
         m_triangles = new NativeArray<int>(36 * Data.chunkSize * Data.chunkSize * Data.chunkSize / 2, Allocator.TempJob);
         m_uvs = new NativeArray<Vector2>(24 * Data.chunkSize * Data.chunkSize * Data.chunkSize / 2, Allocator.TempJob);
@@ -120,9 +120,9 @@ public struct ChunkJob : IJob
         }
     }
 
-    private static bool IsSolid(FastNoiseLite noise, Vector3 voxelPos)
+    private bool IsSolid(FastNoiseLite noise, Vector3 voxelPos)
     {
-        float height = noise.GetNoise(voxelPos.x, voxelPos.z) * Data.chunkSize;
+        float height = noise.GetNoise(voxelPos.x + chunkPos.x, voxelPos.z + chunkPos.z) * Data.chunkSize;
 
         if (voxelPos.y <= height)
         {

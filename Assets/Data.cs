@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Data
 {
-    public const int worldSize = 8;
+    public const int chunkNum = 50;
 
     public const int chunkSize = 8;
 

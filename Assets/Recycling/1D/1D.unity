@@ -310,7 +310,7 @@ GameObject:
   - component: {fileID: 1040830658}
   - component: {fileID: 1040830659}
   m_Layer: 0
-  m_Name: chunks
+  m_Name: cubes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -339,7 +339,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1040830657}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ac31d93d38ad412eb88081fc85c65f7, type: 3}
+  m_Script: {fileID: 11500000, guid: 0462a669346df42f6ae1c05ca7117351, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   chunks:
