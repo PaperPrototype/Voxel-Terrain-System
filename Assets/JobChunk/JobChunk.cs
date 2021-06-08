@@ -70,55 +70,55 @@ public struct ChunkJob : IJob
         vertexIndex[0] = 0;
         triangleIndex[0] = 0;
 
-        for (int x = 0; x < Data.chunkSize; x++)
-        {
-            for (int y = 0; y < Data.chunkSize; y++)
-            {
-                for (int z = 0; z < Data.chunkSize; z++)
-                {
-                    Vector3 position = new Vector3(x, y, z);
+        //for (int x = 0; x < Data.chunkSize; x++)
+        //{
+        //    for (int y = 0; y < Data.chunkSize; y++)
+        //    {
+        //        for (int z = 0; z < Data.chunkSize; z++)
+        //        {
+        //            Vector3 position = new Vector3(x, y, z);
 
-                    if (IsSolid(noise, position))
-                    {
-                        DrawVoxel(noise, position);
-                    }
-                }
-            }
-        }
+        //            if (IsSolid(noise, position))
+        //            {
+        //                DrawVoxel(noise, position);
+        //            }
+        //        }
+        //    }
+        //}
     }
 
-    private void DrawVoxel(FastNoiseLite noise, Vector3 position)
-    {
-        for (int face = 0; face < 6; face++)
-        {
-            if (!IsSolid(noise, Data.NeighborOffset[face] + position))
-            {
-                vertices[vertexIndex[0] + 0] = position + Data.Vertices[Data.BuildOrder[face, 0]];
-                vertices[vertexIndex[0] + 1] = position + Data.Vertices[Data.BuildOrder[face, 1]];
-                vertices[vertexIndex[0] + 2] = position + Data.Vertices[Data.BuildOrder[face, 2]];
-                vertices[vertexIndex[0] + 3] = position + Data.Vertices[Data.BuildOrder[face, 3]];
+    //private void DrawVoxel(FastNoiseLite noise, Vector3 position)
+    //{
+    //    for (int face = 0; face < 6; face++)
+    //    {
+    //        if (!IsSolid(noise, Data.NeighborOffset[face] + position))
+    //        {
+    //            vertices[vertexIndex[0] + 0] = position + Data.Vertices[Data.BuildOrder[face, 0]];
+    //            vertices[vertexIndex[0] + 1] = position + Data.Vertices[Data.BuildOrder[face, 1]];
+    //            vertices[vertexIndex[0] + 2] = position + Data.Vertices[Data.BuildOrder[face, 2]];
+    //            vertices[vertexIndex[0] + 3] = position + Data.Vertices[Data.BuildOrder[face, 3]];
 
-                // get the correct triangle index
-                triangles[triangleIndex[0] + 0] = vertexIndex[0] + 0;
-                triangles[triangleIndex[0] + 1] = vertexIndex[0] + 1;
-                triangles[triangleIndex[0] + 2] = vertexIndex[0] + 2;
-                triangles[triangleIndex[0] + 3] = vertexIndex[0] + 2;
-                triangles[triangleIndex[0] + 4] = vertexIndex[0] + 1;
-                triangles[triangleIndex[0] + 5] = vertexIndex[0] + 3;
+    //            // get the correct triangle index
+    //            triangles[triangleIndex[0] + 0] = vertexIndex[0] + 0;
+    //            triangles[triangleIndex[0] + 1] = vertexIndex[0] + 1;
+    //            triangles[triangleIndex[0] + 2] = vertexIndex[0] + 2;
+    //            triangles[triangleIndex[0] + 3] = vertexIndex[0] + 2;
+    //            triangles[triangleIndex[0] + 4] = vertexIndex[0] + 1;
+    //            triangles[triangleIndex[0] + 5] = vertexIndex[0] + 3;
 
-                uvs[vertexIndex[0] + 0] = new Vector2(0, 0);
-                uvs[vertexIndex[0] + 1] = new Vector2(0, 1);
-                uvs[vertexIndex[0] + 2] = new Vector2(1, 0);
-                uvs[vertexIndex[0] + 3] = new Vector2(1, 1);
+    //            uvs[vertexIndex[0] + 0] = new Vector2(0, 0);
+    //            uvs[vertexIndex[0] + 1] = new Vector2(0, 1);
+    //            uvs[vertexIndex[0] + 2] = new Vector2(1, 0);
+    //            uvs[vertexIndex[0] + 3] = new Vector2(1, 1);
 
-                // increment by 4 because we only added 4 vertices
-                vertexIndex[0] += 4;
+    //            // increment by 4 because we only added 4 vertices
+    //            vertexIndex[0] += 4;
 
-                // increment by 6 because we only added 6 ints (6 / 3 = 2 triangles)
-                triangleIndex[0] += 6;
-            }
-        }
-    }
+    //            // increment by 6 because we only added 6 ints (6 / 3 = 2 triangles)
+    //            triangleIndex[0] += 6;
+    //        }
+    //    }
+    //}
 
     private bool IsSolid(FastNoiseLite noise, Vector3 voxelPos)
     {

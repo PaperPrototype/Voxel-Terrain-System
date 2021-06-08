@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Mathematics;
 
 public class Data
 {
     public const int chunkNum = 50;
 
-    public const int chunkSize = 8;
+    public const int chunkSize = 16;
 
     public static readonly Vector3[] Vertices = new Vector3[8]
     {
@@ -36,13 +37,13 @@ public class Data
         {0, 3, 1, 2} // back face
     };
 
-    public static readonly Vector3[] NeighborOffset = new Vector3[6]
+    public static readonly int3[] NeighborOffset = new int3[6]
     {
-        new Vector3(1.0f, 0.0f, 0.0f),  // right
-        new Vector3(-1.0f, 0.0f, 0.0f), // left
-        new Vector3(0.0f, 1.0f, 0.0f),  // up
-        new Vector3(0.0f, -1.0f, 0.0f), // down
-        new Vector3(0.0f, 0.0f, 1.0f),  // front
-        new Vector3(0.0f, 0.0f, -1.0f), // back
+        new int3(1, 0, 0),  // right
+        new int3(-1, 0, 0), // left
+        new int3(0, 1, 0),  // up
+        new int3(0, -1, 0), // down
+        new int3(0, 0, 1),  // front
+        new int3(0, 0, -1), // back
     };
 }
