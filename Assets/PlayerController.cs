@@ -19,7 +19,6 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
         m_rb = gameObject.GetComponent<Rigidbody>();
     }
 
@@ -27,7 +26,10 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         UpdateMovement();
-        UpdateLook();
+        if (Input.GetMouseButton(1))
+        {
+            UpdateLook();
+        }
     }
 
     private void UpdateMovement()
@@ -49,7 +51,7 @@ public class PlayerController : MonoBehaviour
         float rotateSpeedy = Input.GetAxis("Mouse X") * lookSpeed * Time.deltaTime;
         float rotateSpeedx = -Input.GetAxis("Mouse Y") * lookSpeed * Time.deltaTime;
 
-        head.Rotate(new Vector3(0, rotateSpeedy, 0));
-        cam.Rotate(new Vector3(rotateSpeedx, 0, 0));
+        head.Rotate(Vector3.up, rotateSpeedy);
+        cam.Rotate(Vector3.right, rotateSpeedx);
     }
 }

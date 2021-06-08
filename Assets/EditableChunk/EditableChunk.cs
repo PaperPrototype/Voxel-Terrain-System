@@ -15,8 +15,8 @@ public class EditableChunk : MonoBehaviour
     private NativeArray<int> m_triangles;
     private NativeArray<Vector2> m_uvs;
 
-    private int m_vertexIndex = 0;
-    private int m_triangleIndex = 0;
+    private int m_vertexIndex;
+    private int m_triangleIndex;
 
     private void Start()
     {
@@ -28,7 +28,7 @@ public class EditableChunk : MonoBehaviour
         DrawChunk();
     }
 
-    void CalcChunkData()
+    private void CalcChunkData()
     {
         for (int x = 0; x < Data.chunkSize; x++)
         {
@@ -44,6 +44,9 @@ public class EditableChunk : MonoBehaviour
 
     public void DrawChunk()
     {
+        m_vertexIndex = 0;
+        m_triangleIndex = 0;
+
         m_vertices = new NativeArray<Vector3>(24 * Data.chunkSize * Data.chunkSize * Data.chunkSize / 2, Allocator.Temp);
         m_triangles = new NativeArray<int>(36 * Data.chunkSize * Data.chunkSize * Data.chunkSize / 2, Allocator.Temp);
         m_uvs = new NativeArray<Vector2>(24 * Data.chunkSize * Data.chunkSize * Data.chunkSize / 2, Allocator.Temp);
@@ -84,7 +87,7 @@ public class EditableChunk : MonoBehaviour
     {
         for (int side = 0; side < 6; side++)
         {
-            if (!IsSolid(Data.NeighborOffset[side].x + x, Data.NeighborOffset[side].y + x, Data.NeighborOffset[side].z + x))
+            if (!IsSolid(Data.NeighborOffset[side].x + x, Data.NeighborOffset[side].y + y, Data.NeighborOffset[side].z + z))
             {
                 Vector3 pos = new Vector3(x, y, z);
 
