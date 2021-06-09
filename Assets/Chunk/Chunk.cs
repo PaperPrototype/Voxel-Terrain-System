@@ -6,11 +6,13 @@ using Unity.Collections;
 public class Chunk : MonoBehaviour
 {
     private Mesh m_mesh;
+
     private NativeArray<Vector3> m_vertices;
     private NativeArray<int> m_triangles;
     private NativeArray<Vector2> m_uvs;
     private int m_vertexIndex = 0;
     private int m_triangleIndex = 0;
+
     private FastNoiseLite m_noise;
 
     private void Start()
@@ -59,7 +61,7 @@ public class Chunk : MonoBehaviour
 
         for (int side = 0; side < 6; side++)
         {
-            if (!IsSolid(Data.NeighborOffset[side].x + x, Data.NeighborOffset[side].y + y, Data.NeighborOffset[side].z + z))
+            if (!IsSolid(x + Data.NeighborOffset[side].x, y + Data.NeighborOffset[side].y, z + Data.NeighborOffset[side].z))
             {
                 m_vertices[m_vertexIndex + 0] = Data.Vertices[Data.BuildOrder[side, 0]] + pos;
                 m_vertices[m_vertexIndex + 1] = Data.Vertices[Data.BuildOrder[side, 1]] + pos;
@@ -89,7 +91,7 @@ public class Chunk : MonoBehaviour
     
     private bool IsSolid(int x, int y, int z)
     {
-        float height = (m_noise.GetNoise(x, z) + 1) * Data.chunkSize;
+        float height = (m_noise.GetNoise(x, z) + 1) / 2 * Data.chunkSize;
 
         if (y <= height)
         {

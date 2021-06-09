@@ -412,6 +412,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 1918098053}
   chunk: {fileID: 2103581887}
+  prefab: {fileID: 8046790044777286764, guid: b17d02a61480142dfa09521f23c3f35e, type: 3}
 --- !u!1 &1557565713
 GameObject:
   m_ObjectHideFlags: 0

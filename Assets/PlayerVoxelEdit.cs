@@ -7,7 +7,6 @@ public class PlayerVoxelEdit : MonoBehaviour
 {
     public Camera cam;
     public EditableChunk chunk;
-    public GameObject prefab;
 
     // Update is called once per frame
     void Update()
@@ -20,8 +19,6 @@ public class PlayerVoxelEdit : MonoBehaviour
             if (Physics.Raycast(ray, out hit))
             {
                 Vector3 desiredPoint = hit.point - (hit.normal / 2);
-
-
 
                 int3 gridPosition = new int3(Mathf.RoundToInt(desiredPoint.x), Mathf.RoundToInt(desiredPoint.y), Mathf.RoundToInt(desiredPoint.z));
 

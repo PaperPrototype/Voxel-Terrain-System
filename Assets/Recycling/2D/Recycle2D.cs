@@ -9,15 +9,12 @@ public class Recycle2D : MonoBehaviour
 
     private void Start()
     {
-        int i = 0;
-        for (int x = (int)GetRoundedPos().x; x < numCubes + (int)GetRoundedPos().x; x++)
+        for (int x = 0; x < numCubes; x++)
         {
-            for (int z = (int)GetRoundedPos().z; z < numCubes + (int)GetRoundedPos().z; z++)
+            for (int z = 0; z < numCubes; z++)
             {
                 cubes[x, z] = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                cubes[x, z].GetComponent<Transform>().position = new Vector3(x, 0, z);
-                cubes[x, z].gameObject.name = "(" + x + " " + z + ") " + "2D index conversion: " + ((x * numCubes) + z) + " actual index: " + i;
-                i++;
+                cubes[x, z].GetComponent<Transform>().position = new Vector3(x - offset, 0, z - offset);
             }
         }
     }
@@ -29,32 +26,27 @@ public class Recycle2D : MonoBehaviour
             for (int z = 0; z < numCubes; z++)
             {
                 // x
-                if (GetRoundedPos().x + offset < cubes[x, z].transform.position.x)
+                if (center.position.x + offset < cubes[x, z].transform.position.x)
                 {
                     cubes[x, z].transform.position += new Vector3(-numCubes, 0, 0);
                 }
                 else
-                if (GetRoundedPos().x - offset > cubes[x, z].transform.position.x)
+                if (center.position.x - offset > cubes[x, z].transform.position.x)
                 {
                     cubes[x, z].transform.position += new Vector3(numCubes, 0, 0);
                 }
 
                 // z
-                if (GetRoundedPos().z + offset < cubes[x, z].transform.position.z)
+                if (center.position.z + offset < cubes[x, z].transform.position.z)
                 {
                     cubes[x, z].transform.position += new Vector3(0, 0, -numCubes);
                 }
                 else
-                if (GetRoundedPos().z - offset > cubes[x, z].transform.position.z)
+                if (center.position.z - offset > cubes[x, z].transform.position.z)
                 {
                     cubes[x, z].transform.position += new Vector3(0, 0, numCubes);
                 }
             }
         }
-    }
-
-    private Vector3 GetRoundedPos()
-    {
-        return new Vector3(Mathf.Round(center.position.x), 0, Mathf.Round(center.position.z));
     }
 }

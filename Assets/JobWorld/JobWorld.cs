@@ -64,34 +64,29 @@ public class JobWorld : MonoBehaviour
             for (int z = 0; z < Data.chunkNum; z++)
             {
                 // x
-                if (GetRoundedPos().x + offset < chunks[x, z].gameObject.transform.position.x)
+                if (center.position.x + offset < chunks[x, z].gameObject.transform.position.x)
                 {
                     chunks[x, z].gameObject.transform.position -= new Vector3(Data.chunkNum * Data.chunkSize, 0, 0);
                     chunks[x, z].needsDrawn = true;
                 }
-                if (GetRoundedPos().x - offset > chunks[x, z].gameObject.transform.position.x)
+                if (center.position.x - offset > chunks[x, z].gameObject.transform.position.x)
                 {
                     chunks[x, z].gameObject.transform.position += new Vector3(Data.chunkNum * Data.chunkSize, 0, 0);
                     chunks[x, z].needsDrawn = true;
                 }
 
                 // z
-                if (GetRoundedPos().z + offset < chunks[x, z].gameObject.transform.position.z)
+                if (center.position.z + offset < chunks[x, z].gameObject.transform.position.z)
                 {
                     chunks[x, z].gameObject.transform.position -= new Vector3(0, 0, Data.chunkNum * Data.chunkSize);
                     chunks[x, z].needsDrawn = true;
                 }
-                if (GetRoundedPos().z - offset > chunks[x, z].gameObject.transform.position.z)
+                if (center.position.z - offset > chunks[x, z].gameObject.transform.position.z)
                 {
                     chunks[x, z].gameObject.transform.position += new Vector3(0, 0, Data.chunkNum * Data.chunkSize);
                     chunks[x, z].needsDrawn = true;
                 }
             }
         }
-    }
-
-    private Vector3 GetRoundedPos()
-    {
-        return new Vector3(Mathf.Round(center.position.x / Data.chunkSize), 0, Mathf.Round(center.position.z / Data.chunkSize)) * Data.chunkSize;
     }
 }

@@ -20,19 +20,14 @@ public class Recycle1D : MonoBehaviour
     {
         for (int i = 0; i < numCubes; i++)
         {
-            if (GetRoundedPos().x + offset < cubes[i].transform.position.x)
+            if (center.position.x + offset < cubes[i].transform.position.x)
             {
                 cubes[i].transform.position -= new Vector3(numCubes, 0, 0);
             }
-            if (GetRoundedPos().x - offset > cubes[i].transform.position.x)
+            if (center.position.x - offset > cubes[i].transform.position.x)
             {
                 cubes[i].transform.position += new Vector3(numCubes, 0, 0);
             }
         }
-    }
-
-    private Vector3 GetRoundedPos()
-    {
-        return new Vector3(Mathf.Round(center.position.x), 0, 0);
     }
 }
