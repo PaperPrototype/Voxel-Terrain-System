@@ -20,15 +20,15 @@ public class Chunk : MonoBehaviour
         m_noise = new FastNoiseLite();
         m_noise.SetNoiseType(FastNoiseLite.NoiseType.OpenSimplex2);
 
-        m_vertices = new NativeArray<Vector3>(24 * Data.chunkSize * Data.chunkSize * Data.chunkSize / 2, Allocator.Temp);
-        m_triangles = new NativeArray<int>(36 * Data.chunkSize * Data.chunkSize * Data.chunkSize / 2, Allocator.Temp);
-        m_uvs = new NativeArray<Vector2>(24 * Data.chunkSize * Data.chunkSize * Data.chunkSize / 2, Allocator.Temp);
+        m_vertices = new NativeArray<Vector3>(24 * DataDefs.chunkSize * DataDefs.chunkSize * DataDefs.chunkSize / 2, Allocator.Temp);
+        m_triangles = new NativeArray<int>(36 * DataDefs.chunkSize * DataDefs.chunkSize * DataDefs.chunkSize / 2, Allocator.Temp);
+        m_uvs = new NativeArray<Vector2>(24 * DataDefs.chunkSize * DataDefs.chunkSize * DataDefs.chunkSize / 2, Allocator.Temp);
 
-        for (int x = 0; x < Data.chunkSize; x++)
+        for (int x = 0; x < DataDefs.chunkSize; x++)
         {
-            for (int y = 0; y < Data.chunkSize; y++)
+            for (int y = 0; y < DataDefs.chunkSize; y++)
             {
-                for (int z = 0; z < Data.chunkSize; z++)
+                for (int z = 0; z < DataDefs.chunkSize; z++)
                 {
                     if (IsSolid(x, y, z))
                     {
@@ -61,12 +61,12 @@ public class Chunk : MonoBehaviour
 
         for (int side = 0; side < 6; side++)
         {
-            if (!IsSolid(x + Data.NeighborOffset[side].x, y + Data.NeighborOffset[side].y, z + Data.NeighborOffset[side].z))
+            if (!IsSolid(x + DataDefs.NeighborOffset[side].x, y + DataDefs.NeighborOffset[side].y, z + DataDefs.NeighborOffset[side].z))
             {
-                m_vertices[m_vertexIndex + 0] = Data.Vertices[Data.BuildOrder[side, 0]] + pos;
-                m_vertices[m_vertexIndex + 1] = Data.Vertices[Data.BuildOrder[side, 1]] + pos;
-                m_vertices[m_vertexIndex + 2] = Data.Vertices[Data.BuildOrder[side, 2]] + pos;
-                m_vertices[m_vertexIndex + 3] = Data.Vertices[Data.BuildOrder[side, 3]] + pos;
+                m_vertices[m_vertexIndex + 0] = DataDefs.Vertices[DataDefs.BuildOrder[side, 0]] + pos;
+                m_vertices[m_vertexIndex + 1] = DataDefs.Vertices[DataDefs.BuildOrder[side, 1]] + pos;
+                m_vertices[m_vertexIndex + 2] = DataDefs.Vertices[DataDefs.BuildOrder[side, 2]] + pos;
+                m_vertices[m_vertexIndex + 3] = DataDefs.Vertices[DataDefs.BuildOrder[side, 3]] + pos;
 
                 m_triangles[m_triangleIndex + 0] = m_vertexIndex + 0;
                 m_triangles[m_triangleIndex + 1] = m_vertexIndex + 1;
@@ -91,7 +91,7 @@ public class Chunk : MonoBehaviour
     
     private bool IsSolid(int x, int y, int z)
     {
-        float height = (m_noise.GetNoise(x, z) + 1) / 2 * Data.chunkSize;
+        float height = (m_noise.GetNoise(x, z) + 1) / 2 * DataDefs.chunkSize;
 
         if (y <= height)
         {

@@ -1,10 +1,11 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using Unity;
 using Unity.Jobs;
 using Unity.Collections;
 
-[RequireComponent(typeof(MeshFilter))]
-[RequireComponent(typeof(MeshRenderer))]
-public class JobChunk : MonoBehaviour
+public class BuildableChunk : MonoBehaviour
 {
     private NativeArray<Vector3> m_vertices;
     private NativeArray<int> m_triangles;
@@ -12,7 +13,8 @@ public class JobChunk : MonoBehaviour
     private NativeArray<int> m_vertexIndex;
     private NativeArray<int> m_triangleIndex;
 
-    private void Start() {
+    private void Start()
+    {
 
         m_vertices = new NativeArray<Vector3>(24 * DataDefs.chunkSize * DataDefs.chunkSize * DataDefs.chunkSize / 2, Allocator.TempJob);
         m_triangles = new NativeArray<int>(36 * DataDefs.chunkSize * DataDefs.chunkSize * DataDefs.chunkSize / 2, Allocator.TempJob);

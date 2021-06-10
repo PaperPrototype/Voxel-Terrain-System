@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Mathematics;
+using System;
 
-public class Data
+public static class DataDefs
 {
     public const int chunkNum = 50;
 
@@ -18,7 +19,7 @@ public class Data
         new Vector3(-0.5f, -0.5f, 0.5f),
         new Vector3(0.5f, -0.5f, 0.5f),
         new Vector3(0.5f, 0.5f, 0.5f),
-        new Vector3(-0.5f, 0.5f, 0.5f)
+        new Vector3(-0.5f, 0.5f, 0.5f),
     };
 
     public static readonly int[,] BuildOrder = new int[6, 4]
@@ -27,14 +28,14 @@ public class Data
 
         //0 1 2 2 1 3
         
-        {1, 2, 5, 6},  // right face
+        {1, 2, 5, 6}, // right face
         {4, 7, 0, 3}, // left face
         
         {3, 7, 2, 6}, // up face
         {1, 5, 0, 4}, // down face
         
         {5, 6, 4, 7}, // front face
-        {0, 3, 1, 2} // back face
+        {0, 3, 1, 2}, // back face
     };
 
     public static readonly int3[] NeighborOffset = new int3[6]
@@ -46,4 +47,25 @@ public class Data
         new int3(0, 0, 1),  // front
         new int3(0, 0, -1), // back
     };
+
+    public static readonly Vector2[] UVs = new Vector2[4]
+    {
+        new Vector2(0, 0),
+        new Vector2(0, 1),
+        new Vector2(1, 0),
+        new Vector2(1, 1),
+    };
+
+
+    [Serializable]
+    public struct ChunkData
+    {
+        public byte[] data;
+
+        public ChunkData(byte[] data)
+        {
+            this.data = data;
+        }
+    }
+
 }

@@ -44,10 +44,10 @@ public class Voxel : MonoBehaviour
         for (int side = 0; side < 6; side++)
         {
             // set the vertices
-            m_vertices[m_vertexIndex + 0] = Data.Vertices[Data.BuildOrder[side, 0]];
-            m_vertices[m_vertexIndex + 1] = Data.Vertices[Data.BuildOrder[side, 1]];
-            m_vertices[m_vertexIndex + 2] = Data.Vertices[Data.BuildOrder[side, 2]];
-            m_vertices[m_vertexIndex + 3] = Data.Vertices[Data.BuildOrder[side, 3]];
+            m_vertices[m_vertexIndex + 0] = DataDefs.Vertices[DataDefs.BuildOrder[side, 0]];
+            m_vertices[m_vertexIndex + 1] = DataDefs.Vertices[DataDefs.BuildOrder[side, 1]];
+            m_vertices[m_vertexIndex + 2] = DataDefs.Vertices[DataDefs.BuildOrder[side, 2]];
+            m_vertices[m_vertexIndex + 3] = DataDefs.Vertices[DataDefs.BuildOrder[side, 3]];
 
             // set the triangles (get the correct triangle index
             m_triangles[m_triangleIndex + 0] = m_vertexIndex + 0;

@@ -18,7 +18,7 @@ public class JobWorldChunk
     private NativeArray<int> m_triangleIndex;
 
     private JobHandle m_handle;
-    private ChunkJob m_chunkJob;
+    private JobDefs.ChunkJob m_chunkJob;
 
     public JobWorldChunk(Material m_material, Vector3 m_position)
     {
@@ -41,13 +41,13 @@ public class JobWorldChunk
         {
             Debug.Log("Starting draw: " + gameObject.transform.position);
 
-            m_vertices = new NativeArray<Vector3>(24 * Data.chunkSize * Data.chunkSize * Data.chunkSize / 2, Allocator.TempJob);
-            m_triangles = new NativeArray<int>(36 * Data.chunkSize * Data.chunkSize * Data.chunkSize / 2, Allocator.TempJob);
-            m_uvs = new NativeArray<Vector2>(24 * Data.chunkSize * Data.chunkSize * Data.chunkSize / 2, Allocator.TempJob);
+            m_vertices = new NativeArray<Vector3>(24 * DataDefs.chunkSize * DataDefs.chunkSize * DataDefs.chunkSize / 2, Allocator.TempJob);
+            m_triangles = new NativeArray<int>(36 * DataDefs.chunkSize * DataDefs.chunkSize * DataDefs.chunkSize / 2, Allocator.TempJob);
+            m_uvs = new NativeArray<Vector2>(24 * DataDefs.chunkSize * DataDefs.chunkSize * DataDefs.chunkSize / 2, Allocator.TempJob);
             m_vertexIndex = new NativeArray<int>(1, Allocator.TempJob);
             m_triangleIndex = new NativeArray<int>(1, Allocator.TempJob);
 
-            m_chunkJob = new ChunkJob();
+            m_chunkJob = new JobDefs.ChunkJob();
             m_chunkJob.chunkPos = gameObject.transform.position;
             m_chunkJob.vertices = m_vertices;
             m_chunkJob.triangles = m_triangles;
