@@ -1,12 +1,68 @@
 using UnityEngine;
 using Unity.Collections;
+using System;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using Unity.Jobs;
+
+[Serializable]
+public struct ChunkData
+{
+    public byte[] data;
+
+    public ChunkData(byte[] data)
+    {
+        this.data = data;
+    }
+}
+
+public struct CalcDataJob: IJob
+{
+    public Vector3 position;
+    public NativeArray<byte> data;
+
+    public void Execute()
+    {
+        FastNoiseLite noise = new FastNoiseLite();
+        noise.SetNoiseType(FastNoiseLite.NoiseType.OpenSimplex2);
+
+        for (int x = 0; x < Data.chunkSize; x++)
+        {
+            for (int y = 0; y < Data.chunkSize; y++)
+            {
+                for (int z = 0; z < Data.chunkSize; z++)
+                {
+                    data[Utils.GetIndex(x, y, z)] = GetPerlinVoxel(noise, x, y, z);
+                }
+            }
+        }
+    }
+
+    private byte GetPerlinVoxel(FastNoiseLite noise, float x, float y, float z)
+    {
+        float height = (noise.GetNoise(x + position.x, z + position.z) + 1) / 2 * Data.chunkSize;
+
+        if (y >= height)
+        {
+            return 0; // air
+        }
+        else
+        {
+            return 1; // solid (the only "voxelType")
+        }
+    }
+}
+
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
 [RequireComponent(typeof(MeshCollider))]
 public class EditableChunk : MonoBehaviour
 {
-    public byte[,,] data;
+    public ChunkData chunkData;
+
+    private NativeArray<byte> m_data;
+    private JobHandle m_dataJobHandle;
 
     private Mesh m_mesh;
     private FastNoiseLite m_noise;
@@ -20,12 +76,60 @@ public class EditableChunk : MonoBehaviour
 
     private void Start()
     {
-        data = new byte[Data.chunkSize, Data.chunkSize, Data.chunkSize];
+        chunkData = new ChunkData(new byte[Data.chunkSize * Data.chunkSize * Data.chunkSize]);
+
         m_noise = new FastNoiseLite();
         m_noise.SetNoiseType(FastNoiseLite.NoiseType.OpenSimplex2);
 
-        CalcChunkData();
-        DrawChunk();
+
+        if (LoadChunk())
+        {
+            DrawChunk();
+        }
+        else
+        {
+            ScheduleCalc();
+            CompleteCalc();
+            DrawChunk();
+        }
+    }
+
+    /// <summary>
+    /// Loads the chunks data from a file. 
+    /// </summary>
+    /// <returns>If the file doesn't exist returns false.</returns>
+    public bool LoadChunk()
+    {
+        string chunkFile = Application.persistentDataPath + "/chunks/" + gameObject.transform.position + ".chunk";
+        if (File.Exists(chunkFile))
+        {
+            // create formatter and get file access
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream fileStream = File.Open(chunkFile, FileMode.Open);
+
+            // deserialize the data and set the chunks data to be this data
+            chunkData = (ChunkData)formatter.Deserialize(fileStream);
+            fileStream.Close();
+
+            return true;
+        }
+        return false;
+    }
+
+    public void SaveChunk()
+    {
+        string chunkFile = Application.persistentDataPath + "/chunks/" + gameObject.transform.position + ".chunk";
+        if (!File.Exists(chunkFile))
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(chunkFile));
+        }
+        // create formatter and create file access
+        BinaryFormatter formatter = new BinaryFormatter();
+        FileStream fileStream = File.Open(chunkFile, FileMode.OpenOrCreate);
+
+        // save the data and close the file access
+        formatter.Serialize(fileStream, chunkData);
+        fileStream.Close();
     }
 
     private void CalcChunkData()
@@ -36,10 +140,29 @@ public class EditableChunk : MonoBehaviour
             {
                 for (int z = 0; z < Data.chunkSize; z++)
                 {
-                    data[x, y, z] = GetPerlinVoxel(x, y, z);
+                    chunkData.data[Utils.GetIndex(x, y, z)] = GetPerlinVoxel(x, y, z);
                 }
             }
         }
+    }
+
+    private void ScheduleCalc()
+    {
+        m_data = new NativeArray<byte>(Data.chunkSize * Data.chunkSize * Data.chunkSize, Allocator.TempJob);
+
+        CalcDataJob job = new CalcDataJob();
+        job.data = m_data;
+
+        m_dataJobHandle = job.Schedule();
+    }
+
+    private void CompleteCalc()
+    {
+        m_dataJobHandle.Complete();
+
+        chunkData.data = m_data.ToArray();
+
+        m_data.Dispose();
     }
 
     public void DrawChunk()
@@ -119,7 +242,7 @@ public class EditableChunk : MonoBehaviour
 
     private byte GetPerlinVoxel(float x, float y, float z)
     {
-        float height = m_noise.GetNoise(x, z) * Data.chunkSize;
+        float height = (m_noise.GetNoise(x + gameObject.transform.position.x, z + gameObject.transform.position.z) + 1) / 2 * Data.chunkSize;
 
         if (y >= height)
         {
@@ -138,7 +261,7 @@ public class EditableChunk : MonoBehaviour
             y >= 0 && y < Data.chunkSize &&
             z >= 0 && z < Data.chunkSize)
         {
-            byte voxelType = data[x, y, z];
+            byte voxelType = chunkData.data[Utils.GetIndex(x, y, z)];
 
             if (voxelType == 0) return false;
             else return true;
@@ -149,4 +272,5 @@ public class EditableChunk : MonoBehaviour
             return false;
         }
     }
+
 }

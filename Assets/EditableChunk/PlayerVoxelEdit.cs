@@ -22,9 +22,14 @@ public class PlayerVoxelEdit : MonoBehaviour
 
                 int3 gridPosition = new int3(Mathf.RoundToInt(desiredPoint.x), Mathf.RoundToInt(desiredPoint.y), Mathf.RoundToInt(desiredPoint.z));
 
-                chunk.data[gridPosition.x, gridPosition.y, gridPosition.z] = 0;
+                chunk.chunkData.data[Utils.GetIndex(gridPosition.x, gridPosition.y, gridPosition.z)] = 0;
                 chunk.DrawChunk();
             }
         }
+    }
+
+    private void OnDisable()
+    {
+        chunk.SaveChunk();
     }
 }

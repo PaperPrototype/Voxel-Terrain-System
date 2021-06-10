@@ -122,7 +122,7 @@ public struct ChunkJob : IJob
 
     private bool IsSolid(FastNoiseLite noise, int x, int y, int z)
     {
-        float height = noise.GetNoise(x + chunkPos.x, z + chunkPos.z) * Data.chunkSize;
+        float height = (noise.GetNoise(x + chunkPos.x, z + chunkPos.z) + 1) / 2 * Data.chunkSize;
 
         if (y <= height)
         {
