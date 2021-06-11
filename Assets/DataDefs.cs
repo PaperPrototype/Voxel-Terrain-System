@@ -26,7 +26,7 @@ public static class DataDefs
     {
         // right, left, up, down, front, back
 
-        //0 1 2 2 1 3
+        // 0 1 2 2 1 3 <- triangle order
         
         {1, 2, 5, 6}, // right face
         {4, 7, 0, 3}, // left face
