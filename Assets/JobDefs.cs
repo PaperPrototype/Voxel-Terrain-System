@@ -80,10 +80,10 @@ public static class JobDefs
                     triangles[triangleIndex[0] + 4] = vertexIndex[0] + 1;
                     triangles[triangleIndex[0] + 5] = vertexIndex[0] + 3;
 
-                    uvs[vertexIndex[0] + 0] = new Vector2(0, 0);
-                    uvs[vertexIndex[0] + 1] = new Vector2(0, 1);
-                    uvs[vertexIndex[0] + 2] = new Vector2(1, 0);
-                    uvs[vertexIndex[0] + 3] = new Vector2(1, 1);
+                    uvs[vertexIndex[0] + 0] = DataDefs.UVs[0];
+                    uvs[vertexIndex[0] + 1] = DataDefs.UVs[1];
+                    uvs[vertexIndex[0] + 2] = DataDefs.UVs[2];
+                    uvs[vertexIndex[0] + 3] = DataDefs.UVs[3];
 
                     // increment by 4 because we only added 4 vertices
                     vertexIndex[0] += 4;
