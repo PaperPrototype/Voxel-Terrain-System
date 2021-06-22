@@ -8,12 +8,12 @@ public class PlayerVoxelEdit : MonoBehaviour
     public Camera cam;
     public EditableChunk chunk;
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
             RaycastHit hit;
+
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
             if (Physics.Raycast(ray, out hit))

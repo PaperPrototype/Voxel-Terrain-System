@@ -1,88 +1,131 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Unity.Collections;
+using Unity.Mathematics;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using Unity.Jobs;
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
 [RequireComponent(typeof(MeshCollider))]
-public class EditableChunk : MonoBehaviour
+public class Chunk2 : MonoBehaviour
 {
-    public DataDefs.ChunkData chunkData;
-
-    private NativeArray<byte> m_data;
-    private JobHandle m_dataJobHandle;
-
-    private Mesh m_mesh;
-    private FastNoiseLite m_noise;
+    public byte[] data;
+    public bool needsDrawn;
+    public bool needsSaved;
 
     private NativeArray<Vector3> m_vertices;
     private NativeArray<int> m_triangles;
     private NativeArray<Vector2> m_uvs;
+
+    private Mesh m_mesh;
+    private FastNoiseLite m_noise;
 
     private int m_vertexIndex;
     private int m_triangleIndex;
 
     private void Start()
     {
-        chunkData = new DataDefs.ChunkData(new byte[DataDefs.chunkSize * DataDefs.chunkSize * DataDefs.chunkSize]);
+        data = new byte[DataDefs.chunkSize * DataDefs.chunkSize * DataDefs.chunkSize];
+        needsDrawn = false;
+        needsSaved = false;
 
         m_noise = new FastNoiseLite();
         m_noise.SetNoiseType(FastNoiseLite.NoiseType.OpenSimplex2);
 
 
-        if (LoadChunk())
+        // if the chunk was not loaded and LoadChunk returned false
+        if (LoadChunk() == false)
         {
-            DrawChunk();
+            // if no chunk data was loaded we need to calc the data ourselves
+            CalcChunkData();
         }
-        else
+
+        // finally we can draw the chunk's mesh
+        DrawChunk();
+    }
+
+    private void Update()
+    {
+        if (needsDrawn == true)
         {
-            ScheduleCalc();
-            CompleteCalc();
+            print("needs drawn was true");
             DrawChunk();
+            needsDrawn = false;
         }
     }
 
-    /// <summary>
-    /// Loads the chunks data from a file. 
-    /// </summary>
-    /// <returns>If there is no file (with the correct name) returns false.</returns>
-    public bool LoadChunk()
+    private void OnDisable()
     {
-        string chunkFile = Application.persistentDataPath + "/chunks/" + gameObject.transform.position + ".chunk";
-        if (File.Exists(chunkFile))
+        if (needsSaved == true)
         {
-            // create formatter and get file access
-            BinaryFormatter formatter = new BinaryFormatter();
-            FileStream fileStream = File.Open(chunkFile, FileMode.Open);
-
-            // deserialize the data and set the chunks data to be this data
-            // cast the deserialize to a ChunkData
-            chunkData = (DataDefs.ChunkData)formatter.Deserialize(fileStream);
-            fileStream.Close();
-
-            return true;
+            SaveChunk();
         }
-        return false;
     }
 
     public void SaveChunk()
     {
-        string chunkFile = Application.persistentDataPath + "/chunks/" + gameObject.transform.position + ".chunk";
+        string filePath = Application.persistentDataPath + "/chunks/" + gameObject.transform.position + ".chunk";
 
-        if (!File.Exists(chunkFile))
+        // check if folders and directory exist
+        if (!File.Exists(filePath))
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(chunkFile));
+            // ... if not create the directory
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
         }
 
-        // create formatter and create file access
+        // create formatter and get file access
         BinaryFormatter formatter = new BinaryFormatter();
-        FileStream fileStream = File.Open(chunkFile, FileMode.OpenOrCreate);
+        FileStream fileStream = File.Open(filePath, FileMode.OpenOrCreate);
 
-        // save the data and close the file access
-        formatter.Serialize(fileStream, chunkData);
+        // save the data through the fileStream
+        formatter.Serialize(fileStream, data);
+
+        // make sure to close the fileStream!
         fileStream.Close();
+
+        print("the chunk saved to: " + filePath);
+    }
+
+    public bool LoadChunk()
+    {
+        string filePath = Application.persistentDataPath + "/chunks/" + gameObject.transform.position + ".chunk";
+
+        // if the file exists load it, else don't
+        if (File.Exists(filePath))
+        {
+            // create formatter and get file access
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream fileStream = File.Open(filePath, FileMode.Open);
+
+            // deserialize the data and set the chunks data to be this data
+            // cast the deserialize to a byte[]
+            data = (byte[])formatter.Deserialize(fileStream);
+            fileStream.Close();
+
+            print("the chunk loaded from: " + filePath);
+
+            return true;
+        }
+
+        // there wasn't a file to load so we return false
+        return false;
+    }
+
+    public void EditChunkData(Vector3 worldPosition, byte voxelType)
+    {
+        int3 gridIndex = new int3
+            (
+                Mathf.RoundToInt(worldPosition.x - gameObject.transform.position.x),
+                Mathf.RoundToInt(worldPosition.y - gameObject.transform.position.y),
+                Mathf.RoundToInt(worldPosition.z - gameObject.transform.position.z)
+            );
+
+        data[Utils.GetIndex(gridIndex.x, gridIndex.y, gridIndex.z)] = voxelType;
+
+        needsDrawn = true;
+        needsSaved = true;
     }
 
     private void CalcChunkData()
@@ -93,29 +136,10 @@ public class EditableChunk : MonoBehaviour
             {
                 for (int z = 0; z < DataDefs.chunkSize; z++)
                 {
-                    chunkData.data[Utils.GetIndex(x, y, z)] = GetPerlinVoxel(x, y, z);
+                    data[Utils.GetIndex(x, y, z)] = GetPerlinVoxel(x, y, z);
                 }
             }
         }
-    }
-
-    private void ScheduleCalc()
-    {
-        m_data = new NativeArray<byte>(DataDefs.chunkSize * DataDefs.chunkSize * DataDefs.chunkSize, Allocator.TempJob);
-
-        JobDefs.CalcDataJob job = new JobDefs.CalcDataJob();
-        job.data = m_data;
-
-        m_dataJobHandle = job.Schedule();
-    }
-
-    private void CompleteCalc()
-    {
-        m_dataJobHandle.Complete();
-
-        chunkData.data = m_data.ToArray();
-
-        m_data.Dispose();
     }
 
     public void DrawChunk()
@@ -158,6 +182,7 @@ public class EditableChunk : MonoBehaviour
         m_triangles.Dispose();
         m_uvs.Dispose();
     }
+
 
     private void DrawVoxel(int x, int y, int z)
     {
@@ -214,14 +239,14 @@ public class EditableChunk : MonoBehaviour
             y >= 0 && y < DataDefs.chunkSize &&
             z >= 0 && z < DataDefs.chunkSize)
         {
-            byte voxelType = chunkData.data[Utils.GetIndex(x, y, z)];
+            byte voxelType = data[Utils.GetIndex(x, y, z)];
 
             if (voxelType == 0) return false;
             else return true;
         }
         else
         {
-            // this is where we check for neighbor chunks
+            // this is where we would check for neighbor chunks
             return false;
         }
     }

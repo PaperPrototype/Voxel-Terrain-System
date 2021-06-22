@@ -3,9 +3,58 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Jobs;
 using Unity.Collections;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
+using Unity.Burst;
 
 public static class JobDefs
 {
+    public struct SaveDataJob : IJob
+    {
+        public NativeArray<byte> filePath;
+        public NativeArray<byte> data;
+
+        public void Execute()
+        {
+            string filePathStr = Encoding.ASCII.GetString(filePath.ToArray());
+
+            ChunkData chunkData = new ChunkData(data.ToArray());
+
+            if (!File.Exists(filePathStr))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(filePathStr));
+            }
+
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream fileStream = File.Open(filePathStr, FileMode.OpenOrCreate);
+
+            formatter.Serialize(fileStream, chunkData);
+
+            fileStream.Close();
+        }
+    }
+
+    public struct LoadDataJob : IJob
+    {
+        public NativeArray<byte> filePath;
+        public NativeArray<byte> data;
+
+        public void Execute()
+        {
+            string filePathStr = Encoding.ASCII.GetString(filePath.ToArray());
+
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream fileStream = File.Open(filePathStr, FileMode.Open);
+
+            ChunkData chunkData = (ChunkData)formatter.Deserialize(fileStream);
+
+            fileStream.Close();
+
+            data.CopyFrom(chunkData.data);
+        }
+    }
+    
     public struct CalcDataJob : IJob
     {
         public Vector3 position;

@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Collections;
+using UnityEngine.Rendering;
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
@@ -40,6 +41,7 @@ public class Chunk : MonoBehaviour
 
         m_mesh = new Mesh
         {
+            indexFormat = IndexFormat.UInt32,
             vertices = m_vertices.Slice<Vector3>(0, m_vertexIndex).ToArray(),
             triangles = m_triangles.Slice<int>(0, m_triangleIndex).ToArray(),
             uv = m_uvs.Slice<Vector2>(0, m_vertexIndex).ToArray()

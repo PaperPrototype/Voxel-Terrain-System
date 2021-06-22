@@ -372,5 +372,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fe1fb2366a444757aa04c3f008edb34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  material: {fileID: 2100000, guid: a9472ce7d64d94a448e98b0b8482fad7, type: 2}
+  material: {fileID: 2100000, guid: 35b801891eacc463bb7a03e1623055be, type: 2}
   center: {fileID: 1417600222}
