@@ -12,6 +12,7 @@ Simpleified voxel engine in Unity with companion course! https://github.com/Pape
   - RecycleChunksFollow
     - 1D, a 1D cube based proof of concept chunk recycling system
     - 2D, a 2D (x, z) cube based proof of concept chunk recycling system
+  - SmallPlanet, a small planet generator
 
 EDIT: A lot has moved around and changed so the above descriptions may not be correct.
 
