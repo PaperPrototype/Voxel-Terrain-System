@@ -6,7 +6,7 @@ using System;
 
 public static class DataDefs
 {
-    public const int chunkNum = 50;
+    public const int chunkNum = 15;
 
     public const int chunkSize = 16;
 
