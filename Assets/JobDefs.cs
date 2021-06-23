@@ -316,7 +316,7 @@ public static class JobDefs
         {
             float distance = Vector3.Distance(new Vector3(x, y, z) + chunkPos, Vector3.zero);
 
-            // TODO do something with the noise for the planet surface
+            distance += noise.GetNoise(x + chunkPos.x, y + chunkPos.y, z + chunkPos.z) * 10;
 
             if (distance <= planetRadius)
             {
