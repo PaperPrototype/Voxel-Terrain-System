@@ -9,8 +9,10 @@ public class JobWorld2 : MonoBehaviour
     public JobWorldChunk2 chunk;
     public string worldSaveName = "JobWorld2";
 
-    public Material material;
+    public List<DataDefs.ChunkData> savesToBeCompleted;
 
+    public Material material;
+    
     private void Start()
     {
         worldData = new Dictionary<Vector3, DataDefs.ChunkData>();
@@ -21,5 +23,45 @@ public class JobWorld2 : MonoBehaviour
 
         chunk.ScheduleDraw();
         chunk.CompleteDraw();
+
+        /***** Individual Chunk Saving
+        // get the chunk's data out of the worldData dictionary
+        // classes are passed by a reference (like a pointer) so memory is NOT being copied (which could cause slowness)
+        DataDefs.ChunkData data = worldData[chunk.gameObject.transform.position];
+        data.ScheduleSave(GetSaveName(chunk.gameObject.transform.position));
+        data.CompleteSave();
+        *****/
+
+        ScheduleWorldSave();
+        CompleteWorldSave();
+    }
+
+    private void ScheduleWorldSave()
+    {
+        foreach (KeyValuePair<Vector3, DataDefs.ChunkData> item in worldData)
+        {
+            // get the dictionary item and its value (AKA ChunkData)
+            // then run the ScheduleSave function that is in the ChunkData class
+            item.Value.ScheduleSave(GetSaveName(item.Key));
+
+            // add the ChunkData instance to a list so we can call the CompleteSave function on all the ChunkData's
+            savesToBeCompleted.Add(item.Value);
+        }
+    }
+
+    private void CompleteWorldSave()
+    {
+        // go through all the "savesToBeCompleted" and complete their save job
+        foreach(DataDefs.ChunkData data in savesToBeCompleted)
+        {
+            data.CompleteSave();
+        }
+        
+        savesToBeCompleted.Clear();
+    }
+
+    private string GetSaveName(Vector3 pos)
+    {
+        return Application.persistentDataPath + "/" + worldSaveName + "/chunks/" + pos + ".chunk";
     }
 }

@@ -74,10 +74,12 @@ public static class DataDefs
             this.data = data;
         }
 
-        public void ScheduleSave(Vector3 position)
+        public void ScheduleSave(string filePathToSaveTo)
         {
+            Debug.Log("scheduling save for " + filePathToSaveTo);
+
             m_data = new NativeArray<byte>(data, Allocator.TempJob);
-            m_filePath = new NativeArray<byte>(Encoding.ASCII.GetBytes(position.ToString().ToCharArray()), Allocator.TempJob);
+            m_filePath = new NativeArray<byte>(Encoding.ASCII.GetBytes(filePathToSaveTo.ToCharArray()), Allocator.TempJob);
 
             JobDefs.SaveDataJob job = new JobDefs.SaveDataJob()
             {
@@ -85,13 +87,17 @@ public static class DataDefs
                 filePath = m_filePath
             };
 
-
             m_handle = job.Schedule();
         }
 
         public void CompleteSave()
         {
+            Debug.Log("completing save");
 
+            m_handle.Complete();
+
+            m_data.Dispose();
+            m_filePath.Dispose();
         }
     }
 

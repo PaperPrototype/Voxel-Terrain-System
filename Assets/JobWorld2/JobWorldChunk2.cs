@@ -64,11 +64,6 @@ public class JobWorldChunk2
         m_meshRenderer.material = material;
     }
 
-    public string CurrentSaveName()
-    {
-        return Application.persistentDataPath + "/" + m_worldSaveName + "/chunks/" + gameObject.transform.position + ".chunk";
-    }
-
     /// <summary>
     /// Schedule calculating the chunks data
     /// </summary>

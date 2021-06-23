@@ -18,8 +18,6 @@ public static class JobDefs
         {
             string filePathStr = Encoding.ASCII.GetString(filePath.ToArray());
 
-            DataDefs.ChunkData chunkData = new DataDefs.ChunkData(data.ToArray());
-
             if (!File.Exists(filePathStr))
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(filePathStr));
@@ -28,7 +26,7 @@ public static class JobDefs
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream fileStream = File.Open(filePathStr, FileMode.OpenOrCreate);
 
-            formatter.Serialize(fileStream, chunkData);
+            formatter.Serialize(fileStream, data.ToArray());
 
             fileStream.Close();
         }
@@ -46,11 +44,12 @@ public static class JobDefs
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream fileStream = File.Open(filePathStr, FileMode.Open);
 
-            DataDefs.ChunkData chunkData = (DataDefs.ChunkData)formatter.Deserialize(fileStream);
+            byte[] tempdata = (byte[])formatter.Deserialize(fileStream);
 
             fileStream.Close();
 
-            data.CopyFrom(chunkData.data);
+            // put the byte[] from the file into the "data" NativeArray for access outside of the job
+            data.CopyFrom(tempdata);
         }
     }
     
