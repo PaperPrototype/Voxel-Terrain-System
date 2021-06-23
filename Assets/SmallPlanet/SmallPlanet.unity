@@ -376,6 +376,8 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: 35b801891eacc463bb7a03e1623055be, type: 2}
   center: {fileID: 1779740229}
   planetRadius: 100
+  noiseAmplitude: 10
+  noiseFrequency: 0.025
 --- !u!1 &2143201328
 GameObject:
   m_ObjectHideFlags: 0
@@ -405,7 +407,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2143201328}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -13.9938965, y: 250, z: -25.608887}
+  m_LocalPosition: {x: -13.9938965, y: 100, z: -25.608887}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1709720014}

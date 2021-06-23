@@ -7,6 +7,12 @@ public class JobWorld1 : MonoBehaviour
     public Transform center;
     public float planetRadius = 100;
 
+    [Min(1)]
+    public float noiseAmplitude = 10;
+
+    [Range(0, 0.5f)]
+    public float noiseFrequency = 1.25f;
+
     private int offset = DataDefs.chunkNum * DataDefs.chunkSize / 2;
 
     private void Start()
@@ -18,7 +24,7 @@ public class JobWorld1 : MonoBehaviour
                 for (int z = 0; z < DataDefs.chunkNum; z++)
                 {
                     Vector3 position = new Vector3(x * DataDefs.chunkSize, y * DataDefs.chunkSize, z * DataDefs.chunkSize);
-                    chunks[x, y, z] = new JobWorldChunk1(material, position, planetRadius);
+                    chunks[x, y, z] = new JobWorldChunk1(this, material, position, planetRadius);
                 }
             }
         }

@@ -22,9 +22,12 @@ public class JobWorldChunk1
     private JobDefs.PlanetChunkJob m_chunkJob;
 
     private float planetRadius;
+    private JobWorld1 m_owner;
 
-    public JobWorldChunk1(Material m_material, Vector3 m_position, float planetRadius)
+    public JobWorldChunk1(JobWorld1 owner, Material m_material, Vector3 m_position, float planetRadius)
     {
+        m_owner = owner;
+
         m_mesh = new Mesh();
         needsDrawn = true;
         this.planetRadius = planetRadius;
@@ -55,6 +58,8 @@ public class JobWorldChunk1
             m_triangleIndex = new NativeArray<int>(1, Allocator.TempJob);
 
             m_chunkJob = new JobDefs.PlanetChunkJob();
+            m_chunkJob.noiseFrequency = m_owner.noiseFrequency;
+            m_chunkJob.noiseAmplitude = m_owner.noiseAmplitude;
             m_chunkJob.planetRadius = planetRadius;
             m_chunkJob.chunkPos = gameObject.transform.position;
             m_chunkJob.vertices = m_vertices;
