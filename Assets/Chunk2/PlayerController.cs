@@ -8,11 +8,11 @@ public class PlayerController : MonoBehaviour
 {
     // movement
     public float jumpVelocity = 6;
-    public float moveSpeed = 2;
+    public float moveSpeed = 10;
     private Rigidbody m_rb;
 
     // rotation
-    public float lookSpeed = 100;
+    public float lookSpeed = 120;
     public Transform head;
     public Transform cam;
 

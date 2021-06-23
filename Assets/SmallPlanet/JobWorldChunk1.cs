@@ -9,6 +9,7 @@ public class JobWorldChunk1
 
     private MeshFilter m_meshFilter;
     private MeshRenderer m_meshRenderer;
+    private MeshCollider m_meshCollider;
     private Mesh m_mesh;
 
     private NativeArray<Vector3> m_vertices;
@@ -36,6 +37,9 @@ public class JobWorldChunk1
 
         m_meshRenderer = gameObject.AddComponent<MeshRenderer>();
         m_meshRenderer.material = m_material;
+
+        m_meshCollider = gameObject.AddComponent<MeshCollider>();
+        m_meshCollider.sharedMesh = m_mesh;
     }
 
     public void ScheduleDraw()
@@ -82,6 +86,7 @@ public class JobWorldChunk1
             m_mesh.RecalculateNormals();
 
             m_meshFilter.mesh = m_mesh;
+            m_meshCollider.sharedMesh = m_mesh;
 
             m_vertices.Dispose();
             m_triangles.Dispose();

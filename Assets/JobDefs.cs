@@ -6,7 +6,6 @@ using Unity.Collections;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
-using Unity.Burst;
 
 public static class JobDefs
 {
@@ -19,7 +18,7 @@ public static class JobDefs
         {
             string filePathStr = Encoding.ASCII.GetString(filePath.ToArray());
 
-            ChunkData chunkData = new ChunkData(data.ToArray());
+            DataDefs.ChunkData chunkData = new DataDefs.ChunkData(data.ToArray());
 
             if (!File.Exists(filePathStr))
             {
@@ -47,7 +46,7 @@ public static class JobDefs
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream fileStream = File.Open(filePathStr, FileMode.Open);
 
-            ChunkData chunkData = (ChunkData)formatter.Deserialize(fileStream);
+            DataDefs.ChunkData chunkData = (DataDefs.ChunkData)formatter.Deserialize(fileStream);
 
             fileStream.Close();
 

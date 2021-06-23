@@ -14,10 +14,11 @@ using System.Text;
 [RequireComponent(typeof(MeshCollider))]
 public class BuildableChunk : MonoBehaviour
 {
-    public ChunkData chunkData;
+    public DataDefs.ChunkData chunkData;
 
+    private bool m_needsSaved;
     private bool m_needsDrawn;
-    public bool needsSaved;
+    private bool m_needsLoadedNotCalc;
 
     private NativeArray<Vector3> m_vertices;
     private NativeArray<int> m_triangles;
@@ -42,6 +43,33 @@ public class BuildableChunk : MonoBehaviour
     private MeshFilter m_meshFilter;
     private MeshCollider m_meshCollider;
 
+    private void OnEnable()
+    {
+        m_needsSaved = false;
+        m_needsDrawn = false;
+        m_needsLoadedNotCalc = false;
+        chunkData = new DataDefs.ChunkData(new byte[DataDefs.chunkSize * DataDefs.chunkSize * DataDefs.chunkSize]);
+
+        m_meshFilter = gameObject.GetComponent<MeshFilter>();
+        m_meshCollider = gameObject.GetComponent<MeshCollider>();
+
+        ScheduleSmartInit();
+        CompleteSmartInit();
+
+        ScheduleDraw();
+        CompleteDraw();
+    }
+
+    private void OnDisable()
+    {
+        // if ScheduleSave ran a save job...
+        if (ScheduleSave())
+        {
+            // ...then complete that save job
+            CompleteSave();
+        }
+    }
+
     private void Update()
     {
         if (m_needsDrawn == true)
@@ -50,6 +78,37 @@ public class BuildableChunk : MonoBehaviour
             CompleteDraw();
 
             m_needsDrawn = false;
+        }
+    }
+
+    /// <summary>
+    /// Automatically figures out if chunk data needs loaded from file or calculated. Calls either ScheduleCalc or ScheduleLoad
+    /// </summary>
+    public void ScheduleSmartInit()
+    {
+        // if no load was needed
+        if (!ScheduleLoad())
+        {
+            ScheduleCalc();
+        }
+        else
+        {
+            m_needsLoadedNotCalc = true;
+        }
+    }
+
+    /// <summary>
+    /// Automatically figures out if CompleteCalc or CompleteLoad needs called after calling the SmartScheduleInit function
+    /// </summary>
+    public void CompleteSmartInit()
+    {
+        if (m_needsLoadedNotCalc == true)
+        {
+            CompleteLoad();
+        }
+        else
+        {
+            CompleteCalc();
         }
     }
 
@@ -63,43 +122,7 @@ public class BuildableChunk : MonoBehaviour
 
         chunkData.data[Utils.GetIndex(gridPosition.x, gridPosition.y, gridPosition.z)] = voxelType;
         m_needsDrawn = true;
-        needsSaved = true;
-    }
-
-    private void OnEnable()
-    {
-        needsSaved = false;
-        m_needsDrawn = false;
-        chunkData = new ChunkData(new byte[DataDefs.chunkSize * DataDefs.chunkSize * DataDefs.chunkSize]);
-
-        m_meshFilter = gameObject.GetComponent<MeshFilter>();
-        m_meshCollider = gameObject.GetComponent<MeshCollider>();
-
-        // if no load was needed
-        if (!ScheduleLoad())
-        {
-            ScheduleCalc();
-            CompleteCalc();
-        }
-        // load was needed and job was run
-        // now complete the job and set the data
-        else
-        {
-            CompleteLoad();
-        }
-
-        ScheduleDraw();
-        CompleteDraw();
-    }
-
-    private void OnDisable()
-    {
-        // if scheule save ran a save job...
-        if (ScheduleSave())
-        {
-            // then complete that job
-            CompleteSave();
-        }
+        m_needsSaved = true;
     }
 
     public string GetCurrentSaveName()
@@ -109,7 +132,7 @@ public class BuildableChunk : MonoBehaviour
 
     public bool ScheduleSave()
     {
-        if (needsSaved == true)
+        if (m_needsSaved == true)
         {
             print("running save job for " + GetCurrentSaveName());
             m_data = new NativeArray<byte>(chunkData.data, Allocator.TempJob);
@@ -133,7 +156,7 @@ public class BuildableChunk : MonoBehaviour
     {
         m_saveHandle.Complete();
 
-        needsSaved = false;
+        m_needsSaved = false;
 
         m_data.Dispose();
         m_filePath.Dispose();
@@ -178,7 +201,7 @@ public class BuildableChunk : MonoBehaviour
 
     public bool TrySave()
     {
-        if (needsSaved == true)
+        if (m_needsSaved == true)
         {
             string fileName = GetCurrentSaveName();
 
@@ -216,7 +239,7 @@ public class BuildableChunk : MonoBehaviour
 
             // deserialize the data and set the chunks data to be this data
             // cast the deserialize to a ChunkData
-            chunkData = (ChunkData)formatter.Deserialize(fileStream);
+            chunkData = (DataDefs.ChunkData)formatter.Deserialize(fileStream);
 
             fileStream.Close();
 
@@ -305,15 +328,4 @@ public class BuildableChunk : MonoBehaviour
         print("completed draw job");
     }
 
-}
-
-[Serializable]
-public struct ChunkData
-{
-    public byte[] data;
-
-    public ChunkData(byte[] data)
-    {
-        this.data = data;
-    }
 }

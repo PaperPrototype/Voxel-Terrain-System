@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Mathematics;
 using System;
+using Unity.Jobs;
+using Unity.Collections;
+using System.Text;
 
 public static class DataDefs
 {
@@ -58,13 +61,37 @@ public static class DataDefs
 
 
     [Serializable]
-    public struct ChunkData
+    public class ChunkData
     {
         public byte[] data;
+
+        private NativeArray<byte> m_data;
+        private NativeArray<byte> m_filePath;
+        private JobHandle m_handle;
 
         public ChunkData(byte[] data)
         {
             this.data = data;
+        }
+
+        public void ScheduleSave(Vector3 position)
+        {
+            m_data = new NativeArray<byte>(data, Allocator.TempJob);
+            m_filePath = new NativeArray<byte>(Encoding.ASCII.GetBytes(position.ToString().ToCharArray()), Allocator.TempJob);
+
+            JobDefs.SaveDataJob job = new JobDefs.SaveDataJob()
+            {
+                data = m_data,
+                filePath = m_filePath
+            };
+
+
+            m_handle = job.Schedule();
+        }
+
+        public void CompleteSave()
+        {
+
         }
     }
 
