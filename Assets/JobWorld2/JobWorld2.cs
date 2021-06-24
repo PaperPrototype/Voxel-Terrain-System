@@ -32,11 +32,11 @@ public class JobWorld2 : MonoBehaviour
         data.CompleteSave();
         *****/
 
-        ScheduleWorldSave();
-        CompleteWorldSave();
+        ScheduleWorldDataSave();
+        CompleteWorldDataSave();
     }
 
-    private void ScheduleWorldSave()
+    private void ScheduleWorldDataSave()
     {
         foreach (KeyValuePair<Vector3, DataDefs.ChunkData> item in worldData)
         {
@@ -49,7 +49,7 @@ public class JobWorld2 : MonoBehaviour
         }
     }
 
-    private void CompleteWorldSave()
+    private void CompleteWorldDataSave()
     {
         // go through all the "savesToBeCompleted" and complete their save job
         foreach(DataDefs.ChunkData data in savesToBeCompleted)
