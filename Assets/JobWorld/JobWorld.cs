@@ -6,7 +6,7 @@ public class JobWorld : MonoBehaviour
     public JobWorldChunk[,] chunks = new JobWorldChunk[DataDefs.chunkNum, DataDefs.chunkNum];
     public Transform center;
 
-    private int offset = DataDefs.chunkNum * DataDefs.chunkSize / 2;
+    private int offset = (DataDefs.chunkNum * DataDefs.chunkSize) / 2;
 
     private void Start()
     {
@@ -18,28 +18,17 @@ public class JobWorld : MonoBehaviour
                 chunks[x, z] = new JobWorldChunk(material, position);
             }
         }
-
-        for (int x = 0; x < DataDefs.chunkNum; x++) 
-        {
-            for (int z = 0; z < DataDefs.chunkNum; z++) 
-            {
-                chunks[x, z].ScheduleDraw();
-            }
-        }
-
-        for (int x = 0; x < DataDefs.chunkNum; x++) 
-        {
-            for (int z = 0; z < DataDefs.chunkNum; z++) 
-            {
-                chunks[x, z].CompleteDraw();
-            }
-        }
     }
     
     private void Update()
     {
         RecycleChunks();
 
+        DrawChunks();
+    }
+
+    private void DrawChunks()
+    {
         for (int x = 0; x < DataDefs.chunkNum; x++)
         {
             for (int z = 0; z < DataDefs.chunkNum; z++)

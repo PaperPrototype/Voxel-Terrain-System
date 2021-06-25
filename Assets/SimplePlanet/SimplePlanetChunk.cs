@@ -1,15 +1,18 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using Unity.Jobs;
 using Unity.Collections;
+using Unity.Jobs;
 
-public class JobWorldChunk1
+public class SimplePlanetChunk
 {
     public GameObject gameObject;
     public bool needsDrawn;
 
+    private SimplePlanet m_owner;
+
     private MeshFilter m_meshFilter;
     private MeshRenderer m_meshRenderer;
-    private MeshCollider m_meshCollider;
     private Mesh m_mesh;
 
     private NativeArray<Vector3> m_vertices;
@@ -21,16 +24,12 @@ public class JobWorldChunk1
     private JobHandle m_handle;
     private JobDefs.PlanetChunkJob m_chunkJob;
 
-    private float planetRadius;
-    private JobWorld1 m_owner;
-
-    public JobWorldChunk1(JobWorld1 owner, Material m_material, Vector3 m_position, float planetRadius)
+    public SimplePlanetChunk(SimplePlanet owner, Material m_material, Vector3 m_position)
     {
         m_owner = owner;
 
         m_mesh = new Mesh();
         needsDrawn = true;
-        this.planetRadius = planetRadius;
 
         gameObject = new GameObject();
         gameObject.transform.position = m_position;
@@ -40,9 +39,6 @@ public class JobWorldChunk1
 
         m_meshRenderer = gameObject.AddComponent<MeshRenderer>();
         m_meshRenderer.material = m_material;
-
-        m_meshCollider = gameObject.AddComponent<MeshCollider>();
-        m_meshCollider.sharedMesh = m_mesh;
     }
 
     public void ScheduleDraw()
@@ -58,9 +54,7 @@ public class JobWorldChunk1
             m_triangleIndex = new NativeArray<int>(1, Allocator.TempJob);
 
             m_chunkJob = new JobDefs.PlanetChunkJob();
-            // m_chunkJob.noiseFrequency = m_owner.noiseFrequency;
-            // m_chunkJob.noiseAmplitude = m_owner.noiseAmplitude;
-            m_chunkJob.planetRadius = planetRadius;
+            m_chunkJob.planetRadius = m_owner.planetRadius;
             m_chunkJob.chunkPos = gameObject.transform.position;
             m_chunkJob.vertices = m_vertices;
             m_chunkJob.triangles = m_triangles;
@@ -91,7 +85,6 @@ public class JobWorldChunk1
             m_mesh.RecalculateNormals();
 
             m_meshFilter.mesh = m_mesh;
-            m_meshCollider.sharedMesh = m_mesh;
 
             m_vertices.Dispose();
             m_triangles.Dispose();

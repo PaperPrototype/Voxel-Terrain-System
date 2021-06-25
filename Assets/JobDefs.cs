@@ -243,10 +243,9 @@ public static class JobDefs
         }
     }
 
+
     public struct PlanetChunkJob : IJob
     {
-        public float noiseFrequency;
-        public float noiseAmplitude;
         public float planetRadius;
         public Vector3 chunkPos;
         public NativeArray<Vector3> vertices;
@@ -259,7 +258,6 @@ public static class JobDefs
         {
             FastNoiseLite noise = new FastNoiseLite();
             noise.SetNoiseType(FastNoiseLite.NoiseType.OpenSimplex2);
-            noise.SetFrequency(noiseFrequency);
 
             vertexIndex[0] = 0;
             triangleIndex[0] = 0;
@@ -317,8 +315,6 @@ public static class JobDefs
         private bool IsSolid(FastNoiseLite noise, int x, int y, int z)
         {
             float distance = Vector3.Distance(new Vector3(x, y, z) + chunkPos, Vector3.zero);
-
-            distance += noise.GetNoise(x + chunkPos.x, y + chunkPos.y, z + chunkPos.z) * noiseAmplitude;
 
             if (distance <= planetRadius)
             {
