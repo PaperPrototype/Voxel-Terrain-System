@@ -28,6 +28,8 @@ public class SimplePlanet : MonoBehaviour
 
     private void Update()
     {
+        RecycleChunks();
+
         ScheduleChunks();
         CompleteChunks();
     }
@@ -81,12 +83,12 @@ public class SimplePlanet : MonoBehaviour
                     }
 
                     // y
-                    if (player.position.z + offset < chunks[x, y, z].gameObject.transform.position.z)
+                    if (player.position.y + offset < chunks[x, y, z].gameObject.transform.position.y)
                     {
                         chunks[x, y, z].gameObject.transform.position -= new Vector3(0, DataDefs.chunkNum * DataDefs.chunkSize, 0);
                         chunks[x, y, z].needsDrawn = true;
                     }
-                    if (player.position.z - offset > chunks[x, y, z].gameObject.transform.position.z)
+                    if (player.position.y - offset > chunks[x, y, z].gameObject.transform.position.y)
                     {
                         chunks[x, y, z].gameObject.transform.position += new Vector3(0, DataDefs.chunkNum * DataDefs.chunkSize, 0);
                         chunks[x, y, z].needsDrawn = true;

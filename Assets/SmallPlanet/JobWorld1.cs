@@ -7,6 +7,8 @@ public class JobWorld1 : MonoBehaviour
     public Transform center;
     public float planetRadius = 100;
 
+    public bool debug = false;
+
     [Min(1)]
     public float noiseAmplitude = 10;
 

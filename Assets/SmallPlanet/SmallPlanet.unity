@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44877398, g: 0.49883157, b: 0.5756937, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748172, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -468,7 +468,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   material: {fileID: 2100000, guid: 35b801891eacc463bb7a03e1623055be, type: 2}
   center: {fileID: 1779740229}
-  planetRadius: 200
+  planetRadius: 100
+  debug: 0
   noiseAmplitude: 10
   noiseFrequency: 0.025
 --- !u!1 &2143201328
@@ -501,7 +502,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2143201328}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -13.9938965, y: 200, z: -25.608887}
+  m_LocalPosition: {x: 0, y: 205, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1709720014}
@@ -581,7 +582,7 @@ Rigidbody:
   m_GameObject: {fileID: 2143201328}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 0
+  m_Drag: 0.5
   m_AngularDrag: 0.05
   m_UseGravity: 0
   m_IsKinematic: 0
@@ -621,3 +622,56 @@ MonoBehaviour:
   playerTransform: {fileID: 2143201329}
   playerRigidbody: {fileID: 2143201333}
   gravity: 9.8
+  gravityAffectRadius: 290
+  planetGravity:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1.0000038
+      inSlope: -0.13284466
+      outSlope: -0.13284466
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.09328173
+    - serializedVersion: 3
+      time: 0.9985962
+      value: -0.030164612
+      inSlope: -2.7640443
+      outSlope: -2.7640443
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.04491445
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  orientationAffectRadius: 300
+  planetOrientation:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1.0000038
+      inSlope: -1.5588458
+      outSlope: -1.5588458
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.08647451
+    - serializedVersion: 3
+      time: 0.9985962
+      value: -0.0016619302
+      inSlope: -0.50532967
+      outSlope: -0.50532967
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.10199548
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  debug: 1
+  debugGravityAffect: 0
+  debugOrientationAffect: 0

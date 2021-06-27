@@ -49,7 +49,10 @@ public class JobWorldChunk1
     {
         if (needsDrawn == true)
         {
-            Debug.Log("Starting draw: " + gameObject.transform.position);
+            if(m_owner.debug == true)
+            {
+                Debug.Log("Starting draw: " + gameObject.transform.position);
+            }
 
             m_vertices = new NativeArray<Vector3>(24 * DataDefs.chunkSize * DataDefs.chunkSize * DataDefs.chunkSize / 2, Allocator.TempJob);
             m_triangles = new NativeArray<int>(36 * DataDefs.chunkSize * DataDefs.chunkSize * DataDefs.chunkSize / 2, Allocator.TempJob);
@@ -76,7 +79,10 @@ public class JobWorldChunk1
     {
         if (needsDrawn == true)
         {
-            Debug.Log("Completing draw: " + gameObject.transform.position);
+            if (m_owner.debug == true)
+            {
+                Debug.Log("Completing draw: " + gameObject.transform.position);
+            }
 
             m_handle.Complete();
 
