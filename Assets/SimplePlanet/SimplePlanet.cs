@@ -7,6 +7,11 @@ public class SimplePlanet : MonoBehaviour
     public Transform player;
     public float planetRadius = 100;
 
+    [Range(0, 0.5f)]
+    public float frequency = 0.02f;
+
+    public float amplitude = 10;
+
     private int offset = (DataDefs.chunkNum * DataDefs.chunkSize) / 2;
 
     private void Start()

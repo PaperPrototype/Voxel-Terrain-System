@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            m_rb.velocity += transform.up * jumpVelocity; new Vector3(0, jumpVelocity, 0);
+            m_rb.velocity += transform.up * jumpVelocity;
         }
 
         float forwardSpeed = Input.GetAxis("Vertical") * moveSpeed * Time.deltaTime;

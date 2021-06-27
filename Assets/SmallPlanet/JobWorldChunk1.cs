@@ -61,8 +61,8 @@ public class JobWorldChunk1
             m_triangleIndex = new NativeArray<int>(1, Allocator.TempJob);
 
             m_chunkJob = new JobDefs.PlanetChunkJob();
-            // m_chunkJob.noiseFrequency = m_owner.noiseFrequency;
-            // m_chunkJob.noiseAmplitude = m_owner.noiseAmplitude;
+            m_chunkJob.frequency = m_owner.noiseFrequency;
+            m_chunkJob.amplitude = m_owner.noiseAmplitude;
             m_chunkJob.planetRadius = planetRadius;
             m_chunkJob.chunkPos = gameObject.transform.position;
             m_chunkJob.vertices = m_vertices;

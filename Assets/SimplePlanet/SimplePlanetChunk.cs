@@ -13,6 +13,7 @@ public class SimplePlanetChunk
 
     private MeshFilter m_meshFilter;
     private MeshRenderer m_meshRenderer;
+    private MeshCollider m_meshCollider;
     private Mesh m_mesh;
 
     private NativeArray<Vector3> m_vertices;
@@ -35,7 +36,7 @@ public class SimplePlanetChunk
         gameObject.transform.position = m_position;
 
         m_meshFilter = gameObject.AddComponent<MeshFilter>();
-        m_meshFilter.mesh = m_mesh;
+        m_meshCollider = gameObject.AddComponent<MeshCollider>();
 
         m_meshRenderer = gameObject.AddComponent<MeshRenderer>();
         m_meshRenderer.material = m_material;
@@ -54,6 +55,8 @@ public class SimplePlanetChunk
             m_triangleIndex = new NativeArray<int>(1, Allocator.TempJob);
 
             m_chunkJob = new JobDefs.PlanetChunkJob();
+            m_chunkJob.amplitude = m_owner.amplitude;
+            m_chunkJob.frequency = m_owner.frequency;
             m_chunkJob.planetRadius = m_owner.planetRadius;
             m_chunkJob.chunkPos = gameObject.transform.position;
             m_chunkJob.vertices = m_vertices;
@@ -85,6 +88,7 @@ public class SimplePlanetChunk
             m_mesh.RecalculateNormals();
 
             m_meshFilter.mesh = m_mesh;
+            m_meshCollider.sharedMesh = m_mesh;
 
             m_vertices.Dispose();
             m_triangles.Dispose();
