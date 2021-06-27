@@ -53,7 +53,7 @@ public class PlanetGravity : MonoBehaviour
     /// <returns>returns between zero and 1</returns>
     private float CurrentOrientationAffect(float distance)
     {
-        // get the posiiotn on the curve
+        // get the position on the curve
         float curvePos = distance / orientationAffectRadius;
 
         // clamp to 1
@@ -76,7 +76,6 @@ public class PlanetGravity : MonoBehaviour
 
     private float CurrentGravityAffect(float distance)
     {
-
         // where on the animation curve to evaluate
         float curvePos = distance / gravityAffectRadius;
 
