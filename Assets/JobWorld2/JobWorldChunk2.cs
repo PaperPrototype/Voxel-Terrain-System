@@ -41,7 +41,6 @@ public class JobWorldChunk2
 
     private string m_worldSaveName;
 
-
     public JobWorldChunk2(string worldSaveName, JobWorld2 owner, Vector3 position, Material material)
     {
         m_worldSaveName = worldSaveName;

@@ -23,11 +23,11 @@ public class JobWorld2 : MonoBehaviour
 
         chunk.ScheduleDraw();
         chunk.CompleteDraw();
-
+        
         /***** Individual Chunk Saving
         // get the chunk's data out of the worldData dictionary
         // classes are passed by a reference (like a pointer) so memory is NOT being copied (which could cause slowness)
-        DataDefs.ChunkData data = worldData[chunk.gameObject.transform.position];
+        DataDefs.ChunkData data = worldData[chunk.gameObject.transform.position]; // gets data out of 
         data.ScheduleSave(GetSaveName(chunk.gameObject.transform.position));
         data.CompleteSave();
         *****/
