@@ -9,6 +9,11 @@ using System.Text;
 
 public static class DataDefs
 {
+    public static string saveName(Vector3 chunkPos)
+    {
+        return Application.persistentDataPath + "/chunks/" + chunkPos + "s:" + DataDefs.chunkSize + ".chunk";
+    }
+
     public const int chunkNum = 15;
 
     public const int chunkSize = 16;

@@ -66,7 +66,8 @@ public class Chunk2 : MonoBehaviour
 
     public void SaveChunk()
     {
-        string filePath = Application.persistentDataPath + "/chunks/" + gameObject.transform.position + ".chunk";
+        string filePath = DataDefs.saveName(gameObject.transform.position);
+        Debug.Log(filePath);
 
         // check if folders and directory exist
         if (!File.Exists(filePath))
@@ -90,7 +91,7 @@ public class Chunk2 : MonoBehaviour
 
     public bool LoadChunk()
     {
-        string filePath = Application.persistentDataPath + "/chunks/" + gameObject.transform.position + ".chunk";
+        string filePath = DataDefs.saveName(gameObject.transform.position);
 
         // if the file exists load it, else don't
         if (File.Exists(filePath))

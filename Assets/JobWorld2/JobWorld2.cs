@@ -5,8 +5,8 @@ using System;
 
 public class JobWorld2 : MonoBehaviour
 {
-    public Dictionary<Vector3, DataDefs.ChunkData> worldData;
-    public JobWorldChunk2 chunk;
+    public Dictionary<Vector3, DataDefs.ChunkData> dataStore;
+    public JobWorldChunk2[,,] chunks; // physical chunk gameObjects
     public string worldSaveName = "JobWorld2";
 
     public List<DataDefs.ChunkData> savesToBeCompleted;
@@ -15,8 +15,20 @@ public class JobWorld2 : MonoBehaviour
     
     private void Start()
     {
-        worldData = new Dictionary<Vector3, DataDefs.ChunkData>();
-        chunk = new JobWorldChunk2(worldSaveName, this, Vector3.zero, material);
+        //dataStore = new Dictionary<Vector3, DataDefs.ChunkData>();
+        //chunks = new JobWorldChunk2[DataDefs.chunkNum, DataDefs.chunkNum, DataDefs.chunkNum];
+
+        //for (int x = 0; x < DataDefs.chunkNum; x++)
+        //{
+        //    for (int y = 0; y < DataDefs.chunkNum; y++)
+        //    {
+        //        for (int z = 0; z < DataDefs.chunkNum; z++)
+        //        {
+
+        //        }
+        //    }
+        //}
+        JobWorldChunk2 chunk = new JobWorldChunk2(worldSaveName, this, Vector3.zero, material);
 
         chunk.ScheduleCalc();
         chunk.CompleteCalc();
@@ -36,22 +48,28 @@ public class JobWorld2 : MonoBehaviour
         CompleteWorldDataSave();
     }
 
+    private void ScheduleWorldCalc()
+    {
+
+    }
+
     private void ScheduleWorldDataSave()
     {
-        foreach (KeyValuePair<Vector3, DataDefs.ChunkData> item in worldData)
+        // go through each item in worldData
+        foreach (KeyValuePair<Vector3, DataDefs.ChunkData> item in dataStore)
         {
             // get the dictionary item and its value (AKA ChunkData)
             // then run the ScheduleSave function that is in the ChunkData class
             item.Value.ScheduleSave(GetSaveName(item.Key));
 
-            // add the ChunkData instance to a list so we can call the CompleteSave function on all the ChunkData's
+            // add ChunkData instance to saveToBeCompleted list
             savesToBeCompleted.Add(item.Value);
         }
     }
 
     private void CompleteWorldDataSave()
     {
-        // go through all the "savesToBeCompleted" and complete their save job
+        // go through all the ChunkDatas in "savesToBeCompleted" and complete their save job
         foreach(DataDefs.ChunkData data in savesToBeCompleted)
         {
             data.CompleteSave();

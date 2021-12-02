@@ -89,7 +89,7 @@ public class JobWorldChunk2
 
         m_calcHandle.Complete();
 
-        m_owner.worldData.Add(gameObject.transform.position, new DataDefs.ChunkData(m_data.ToArray()));
+        // m_owner.worldData.Add(gameObject.transform.position, new DataDefs.ChunkData(m_data.ToArray()));
 
         m_data.Dispose();
     }
@@ -105,7 +105,7 @@ public class JobWorldChunk2
         m_triangleIndex = new NativeArray<int>(1, Allocator.TempJob);
 
         //                                               \/ <-- use gameObjects position as lookup key for dictionary
-        m_data = new NativeArray<byte>(m_owner.worldData[gameObject.transform.position].data, Allocator.TempJob);
+        // m_data = new NativeArray<byte>(m_owner.worldData[gameObject.transform.position].data, Allocator.TempJob);
 
         m_drawJob = new JobDefs.DrawDataJob
         {

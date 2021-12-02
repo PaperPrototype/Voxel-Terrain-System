@@ -262,6 +262,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7f882e3738ff481c9fef47b7739852b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chunkData:
+    data: 
 --- !u!23 &309835647
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -282,7 +284,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a9472ce7d64d94a448e98b0b8482fad7, type: 2}
+  - {fileID: 2100000, guid: 35b801891eacc463bb7a03e1623055be, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -387,7 +389,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 1750216347}
-  chunk: {fileID: 309835646}
+  chunk: {fileID: 0}
 --- !u!1 &1078978676
 GameObject:
   m_ObjectHideFlags: 0

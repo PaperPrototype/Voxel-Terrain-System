@@ -202,6 +202,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data: 
   needsDrawn: 0
+  needsSaved: 0
 --- !u!23 &137138327
 MeshRenderer:
   m_ObjectHideFlags: 0
