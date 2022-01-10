@@ -16,18 +16,20 @@ public static class DataDefs
 
     public const int chunkNum = 15;
 
-    public const int chunkSize = 16;
+    public const int chunkSize = 32;
+
+    public static readonly Vector3 VertexOffset = new Vector3(0.5f, 0.5f, 0.5f);
 
     public static readonly Vector3[] Vertices = new Vector3[8]
     {
-        new Vector3(-0.5f, -0.5f, -0.5f),
-        new Vector3(0.5f, -0.5f, -0.5f),
-        new Vector3(0.5f, 0.5f, -0.5f),
-        new Vector3(-0.5f, 0.5f, -0.5f),
-        new Vector3(-0.5f, -0.5f, 0.5f),
-        new Vector3(0.5f, -0.5f, 0.5f),
-        new Vector3(0.5f, 0.5f, 0.5f),
-        new Vector3(-0.5f, 0.5f, 0.5f),
+        new Vector3(-0.5f, -0.5f, -0.5f) + VertexOffset,
+        new Vector3(0.5f, -0.5f, -0.5f) + VertexOffset,
+        new Vector3(0.5f, 0.5f, -0.5f) + VertexOffset,
+        new Vector3(-0.5f, 0.5f, -0.5f) + VertexOffset,
+        new Vector3(-0.5f, -0.5f, 0.5f) + VertexOffset,
+        new Vector3(0.5f, -0.5f, 0.5f) + VertexOffset,
+        new Vector3(0.5f, 0.5f, 0.5f) + VertexOffset,
+        new Vector3(-0.5f, 0.5f, 0.5f) + VertexOffset,
     };
 
     public static readonly int[,] BuildOrder = new int[6, 4]

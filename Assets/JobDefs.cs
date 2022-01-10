@@ -243,7 +243,6 @@ public static class JobDefs
         }
     }
 
-
     public struct PlanetChunkJob : IJob
     {
         public float amplitude;

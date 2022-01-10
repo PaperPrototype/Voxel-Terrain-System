@@ -118,9 +118,9 @@ public class Chunk2 : MonoBehaviour
     {
         int3 gridIndex = new int3
             (
-                Mathf.RoundToInt(worldPosition.x - gameObject.transform.position.x),
-                Mathf.RoundToInt(worldPosition.y - gameObject.transform.position.y),
-                Mathf.RoundToInt(worldPosition.z - gameObject.transform.position.z)
+                Mathf.RoundToInt(worldPosition.x - DataDefs.VertexOffset.x - gameObject.transform.position.x),
+                Mathf.RoundToInt(worldPosition.y - DataDefs.VertexOffset.y - gameObject.transform.position.y),
+                Mathf.RoundToInt(worldPosition.z - DataDefs.VertexOffset.z - gameObject.transform.position.z)
             );
 
         data[Utils.GetIndex(gridIndex.x, gridIndex.y, gridIndex.z)] = voxelType;
