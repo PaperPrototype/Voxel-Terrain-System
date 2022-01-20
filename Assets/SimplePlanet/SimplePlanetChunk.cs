@@ -46,8 +46,6 @@ public class SimplePlanetChunk
     {
         if (needsDrawn == true)
         {
-            Debug.Log("Starting draw: " + gameObject.transform.position);
-
             m_vertices = new NativeArray<Vector3>(24 * DataDefs.chunkSize * DataDefs.chunkSize * DataDefs.chunkSize / 2, Allocator.TempJob);
             m_triangles = new NativeArray<int>(36 * DataDefs.chunkSize * DataDefs.chunkSize * DataDefs.chunkSize / 2, Allocator.TempJob);
             m_uvs = new NativeArray<Vector2>(24 * DataDefs.chunkSize * DataDefs.chunkSize * DataDefs.chunkSize / 2, Allocator.TempJob);
@@ -73,8 +71,6 @@ public class SimplePlanetChunk
     {
         if (needsDrawn == true)
         {
-            Debug.Log("Completing draw: " + gameObject.transform.position);
-
             m_handle.Complete();
 
             m_mesh = new Mesh
@@ -96,7 +92,7 @@ public class SimplePlanetChunk
             m_vertexIndex.Dispose();
             m_triangleIndex.Dispose();
 
-            needsDrawn = false;
+            needsDrawn = true;
         }
     }
 }

@@ -29,14 +29,19 @@ public class SimplePlanet : MonoBehaviour
         }
 
         RecycleChunks();
+        Debug.Log("Number of chunks is" + (DataDefs.chunkNum, DataDefs.chunkNum, DataDefs.chunkNum));
     }
 
     private void Update()
     {
         RecycleChunks();
 
+        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
         ScheduleChunks();
         CompleteChunks();
+        stopwatch.Stop();
+        Debug.Log(stopwatch.ElapsedMilliseconds + " is the time it took to draw " + (DataDefs.chunkNum * DataDefs.chunkNum * DataDefs.chunkNum));
     }
 
     private void ScheduleChunks()

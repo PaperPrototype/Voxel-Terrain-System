@@ -6,6 +6,8 @@ using Unity.Collections;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using Unity.Burst;
+using Unity.Mathematics;
 
 public static class JobDefs
 {
@@ -243,6 +245,7 @@ public static class JobDefs
         }
     }
 
+    [BurstCompile]
     public struct PlanetChunkJob : IJob
     {
         public float amplitude;
@@ -256,10 +259,12 @@ public static class JobDefs
         public NativeArray<int> vertexIndex;
         public NativeArray<int> triangleIndex;
 
+        private FastNoiseLiteStruct noise;
+
         public void Execute()
         {
-            FastNoiseLite noise = new FastNoiseLite();
-            noise.SetNoiseType(FastNoiseLite.NoiseType.OpenSimplex2);
+            noise = new FastNoiseLiteStruct();
+            noise.SetNoiseType(FastNoiseLiteStruct.NoiseType.OpenSimplex2);
             noise.SetFrequency(frequency);
 
             vertexIndex[0] = 0;
@@ -271,29 +276,30 @@ public static class JobDefs
                 {
                     for (int z = 0; z < DataDefs.chunkSize; z++)
                     {
-                        if (IsSolid(noise, x, y, z))
+                        if (IsSolid(x, y, z))
                         {
-                            DrawVoxel(noise, x, y, z);
+                            DrawVoxel(x, y, z);
                         }
                     }
                 }
             }
         }
 
-        private void DrawVoxel(FastNoiseLite noise, int x, int y, int z)
+        private void DrawVoxel(int x, int y, int z)
         {
             Vector3 pos = new Vector3(x, y, z);
 
             for (int face = 0; face < 6; face++)
             {
-                if (!IsSolid(noise, DataDefs.NeighborOffset[face].x + x, DataDefs.NeighborOffset[face].y + y, DataDefs.NeighborOffset[face].z + z))
+                if (!IsSolid(DataDefs.NeighborOffset[face].x + x, DataDefs.NeighborOffset[face].y + y, DataDefs.NeighborOffset[face].z + z))
                 {
-                    vertices[vertexIndex[0] + 0] = pos + DataDefs.Vertices[DataDefs.BuildOrder[face, 0]];
-                    vertices[vertexIndex[0] + 1] = pos + DataDefs.Vertices[DataDefs.BuildOrder[face, 1]];
-                    vertices[vertexIndex[0] + 2] = pos + DataDefs.Vertices[DataDefs.BuildOrder[face, 2]];
-                    vertices[vertexIndex[0] + 3] = pos + DataDefs.Vertices[DataDefs.BuildOrder[face, 3]];
+                    vertices[vertexIndex[0] + 0] = pos + DataDefs.Vertices[DataDefs.BuildOrder1D[DataDefs.BuildOrderIndex(face, 0)]];
+                    vertices[vertexIndex[0] + 1] = pos + DataDefs.Vertices[DataDefs.BuildOrder1D[DataDefs.BuildOrderIndex(face, 1)]];
+                    vertices[vertexIndex[0] + 2] = pos + DataDefs.Vertices[DataDefs.BuildOrder1D[DataDefs.BuildOrderIndex(face, 2)]];
+                    vertices[vertexIndex[0] + 3] = pos + DataDefs.Vertices[DataDefs.BuildOrder1D[DataDefs.BuildOrderIndex(face, 3)]];
 
                     // get the correct triangle index
+
                     triangles[triangleIndex[0] + 0] = vertexIndex[0] + 0;
                     triangles[triangleIndex[0] + 1] = vertexIndex[0] + 1;
                     triangles[triangleIndex[0] + 2] = vertexIndex[0] + 2;
@@ -315,7 +321,7 @@ public static class JobDefs
             }
         }
 
-        private bool IsSolid(FastNoiseLite noise, int x, int y, int z)
+        private bool IsSolid(int x, int y, int z)
         {
             float distance = Vector3.Distance(new Vector3(x, y, z) + chunkPos, Vector3.zero);
 

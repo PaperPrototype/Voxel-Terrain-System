@@ -48,6 +48,27 @@ public static class DataDefs
         {0, 3, 1, 2}, // back face
     };
 
+    public static readonly int[] BuildOrder1D = new int[6 * 4]
+    {
+        // right, left, up, down, front, back
+
+        // 0 1 2 2 1 3 <- triangle order
+        
+        1, 2, 5, 6, // right face
+        4, 7, 0, 3, // left face
+        
+        3, 7, 2, 6, // up face
+        1, 5, 0, 4, // down face
+        
+        5, 6, 4, 7, // front face
+        0, 3, 1, 2, // back face
+    };
+
+    public static int BuildOrderIndex(int first, int second)
+    {
+        return BuildOrder1D[(first * 6) + second];
+    }
+
     public static readonly int3[] NeighborOffset = new int3[6]
     {
         new int3(1, 0, 0),  // right

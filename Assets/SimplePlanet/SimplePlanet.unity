@@ -149,7 +149,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 54521037}
   m_LocalRotation: {x: -0.31440675, y: 0, z: 0, w: 0.94928837}
-  m_LocalPosition: {x: 0, y: 154.03, z: 0.3}
+  m_LocalPosition: {x: 0, y: 262, z: -80}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 462405724}
@@ -186,7 +186,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planet: {fileID: 116850691}
   gravityForce: 9.8
-  orientationAffectRadius: 150
+  orientationAffectRadius: 250
   orientationAffectCurve:
     serializedVersion: 2
     m_Curve:
@@ -211,7 +211,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  gravityAffectRadius: 203.6
+  gravityAffectRadius: 300
   gravityAffectCurve:
     serializedVersion: 2
     m_Curve:
