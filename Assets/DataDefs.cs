@@ -16,7 +16,7 @@ public static class DataDefs
 
     public const int chunkNum = 15;
 
-    public const int chunkSize = 32;
+    public const int chunkSize = 16;
 
     public static readonly Vector3 VertexOffset = new Vector3(0.5f, 0.5f, 0.5f);
 
