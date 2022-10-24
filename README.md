@@ -23,7 +23,7 @@ EDIT: A lot has moved around and changed so the above descriptions may not be co
 EDIT: Small Planet Generation!
 ![voxel planet](/Small_Planet.png)
 
-# Redrawing all 256 chunks each frame using Jobs. 
+# Remeshing 256 chunks, each frame, using Jobs. 
  A stress test video. You can copy what I in this video by simply changing the code to redraw the chunks each frame and not checking if the chunk needs redrawn in the chunks draw/complete functions. 
  
  (CLICK THE PICTURE IT IS A LINK TO THE VIDEO)
