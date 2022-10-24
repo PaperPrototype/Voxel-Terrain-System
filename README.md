@@ -26,6 +26,7 @@ EDIT: Small Planet Generation!
 # Remeshing 256 chunks, each frame, using Jobs. 
  A stress test video. You can copy what I in this video by simply changing the code to redraw the chunks each frame and not checking if the chunk needs redrawn in the chunks draw/complete functions. 
  
- (CLICK THE PICTURE IT IS A LINK TO THE VIDEO)
+https://youtu.be/HvpDE3eM6v4
+ 
 [![Watch the video](https://i.ytimg.com/vi/HvpDE3eM6v4/hqdefault.jpg)](https://youtu.be/HvpDE3eM6v4)
 
